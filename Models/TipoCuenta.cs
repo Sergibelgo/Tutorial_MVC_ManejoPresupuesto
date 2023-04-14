@@ -3,7 +3,7 @@ using Tutorial2ManejoPresupuesto.Attributes;
 
 namespace Tutorial2ManejoPresupuesto.Models
 {
-    public class TipoCuenta
+    public class TipoCuenta:ValidationAttribute
     {
         public int Id { get; set; }
         //Para los {x} el 0 es siempre el nombre del campo y los siguientes numeros son el orden de la condicion (Por ejemplo {1} es el maximo de stringLength
@@ -14,5 +14,17 @@ namespace Tutorial2ManejoPresupuesto.Models
         [PrimeraLetraMayuscula]
         public string Nombre { get; set; }
         public int Orden { get; set; }
+        //permite
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Nombre!=null && Nombre.Length>0)
+            {
+                var primeraLetra = Nombre[0].ToString();
+                if (primeraLetra!=primeraLetra.ToUpper())
+                {
+                    yield return new ValidationResult("La primera letra debe ser mayúscula", new[] { nameof(Nombre) });
+                }
+            }
+        }
     }
 }
