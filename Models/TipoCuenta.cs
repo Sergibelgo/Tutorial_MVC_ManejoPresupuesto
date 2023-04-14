@@ -14,7 +14,7 @@ namespace Tutorial2ManejoPresupuesto.Models
         [PrimeraLetraMayuscula]
         public string Nombre { get; set; }
         public int Orden { get; set; }
-        //permite
+        //permite cambiar
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Nombre!=null && Nombre.Length>0)
