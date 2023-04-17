@@ -30,7 +30,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         public async Task<IEnumerable<TipoCuenta>> GetAll()
         {
             using var connection = new SqlConnection(connectionString);
-            return await connection.QueryAsync<TipoCuenta>("SELECT * FROM TiposCuentas");
+            return await connection.QueryAsync<TipoCuenta>("SELECT * FROM TiposCuentas ORDER BY Orden");
         }
         public async Task Update(TipoCuenta tipoCuenta)
         {
@@ -41,6 +41,12 @@ namespace Tutorial2ManejoPresupuesto.Services
         {
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryFirstOrDefaultAsync<TipoCuenta>(@"SELECT * FROM TiposCuentas WHERE Id=@Id", new { id });
+        }
+        public async Task Ordenar(IEnumerable<TipoCuenta> lista)
+        {
+            var query = "UPDATE TiposCuentas SET Orden=@Orden WHERE Id=@Id";
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync(query, lista);
         }
     }
 }
