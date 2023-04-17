@@ -4,10 +4,10 @@ using Tutorial2ManejoPresupuesto.Models;
 
 namespace Tutorial2ManejoPresupuesto.Services
 {
-    public class TiposCuentasServices : ITiposCuentasServices
+    public class TiposCuentasService : ITiposCuentasService
     {
         private readonly string connectionString;
-        public TiposCuentasServices(IConfiguration configuration)
+        public TiposCuentasService(IConfiguration configuration)
         {
 
             this.connectionString = configuration.GetConnectionString("DefaultConnection");
