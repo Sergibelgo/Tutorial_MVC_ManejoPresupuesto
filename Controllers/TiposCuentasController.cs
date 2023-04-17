@@ -36,5 +36,18 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             await _tiposCuentasServices.Crear(tipoCuenta);
             return View();
         }
+        [HttpGet]
+        //Esto sirve para usar la propiedad [Remote(action:"nombrePeticion",controller:"controladorDondeEsta")] que verificara el formulario
+        public async Task<IActionResult> VerificarExisteTipoCuenta(string nombre)
+        {
+            var existe = await _tiposCuentasServices.IsPresent(nombre);
+            if (existe)
+            {
+                //Si queremos devolver cualquier cosa se devuelve un texto con la info
+                return Json($"El nombre {nombre} ya existe");
+            }
+            //Si esta bien se devuelve true directamente
+            return Json(true);
+        }
     }
 }
