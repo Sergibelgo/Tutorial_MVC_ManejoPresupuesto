@@ -27,6 +27,12 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             {
                 return View(tipoCuenta);
             }
+            var exists = await _tiposCuentasServices.IsPresent(tipoCuenta.Nombre);
+            if (exists)
+            {
+                ModelState.AddModelError(nameof(tipoCuenta.Nombre), $"El nombre {tipoCuenta.Nombre} ya existe.");
+                return View(tipoCuenta);
+            }
             await _tiposCuentasServices.Crear(tipoCuenta);
             return View();
         }
