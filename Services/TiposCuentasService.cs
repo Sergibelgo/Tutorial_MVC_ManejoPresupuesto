@@ -17,7 +17,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         {
 
             using var connection = new SqlConnection(connectionString);
-            var id = await connection.QuerySingleAsync<int>($@"INSERT INTO TiposCuentas(Nombre,Orden) VALUES(@Nombre,0);
+            var id = await connection.QuerySingleAsync<int>($@"INSERT INTO TiposCuentas(Nombre,Orden) VALUES(@Nombre,(SELECT MAX(Orden)+1 FROM TiposCuentas));
                                                     SELECT SCOPE_IDENTITY();", tipoCuenta);
             tipoCuenta.Id = id;
         }
