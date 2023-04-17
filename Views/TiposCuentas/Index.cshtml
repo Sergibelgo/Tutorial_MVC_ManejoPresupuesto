@@ -14,10 +14,10 @@
         Nombre
     </th>
     </thead>
-    <tbody>
+    <tbody id="shorted">
         @foreach (var tipo in Model)
         {
-            <tr>
+            <tr rowId="@tipo.Id">
                 <td>
                     <a class="btn btn-primary" asp-action="Editar" asp-route-id="@tipo.Id">Editar</a>
                     <a class="btn btn-danger">Borrar</a>
@@ -29,3 +29,37 @@
         }
     </tbody>
 </table>
+@section Scripts{
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY=" crossorigin="anonymous"></script>
+    <script>
+        const urlOrdenar="@Url.Action("Ordenar")";
+        $(() => {
+            
+            $("#shorted").sortable({
+            stop:async function(e,ui){
+               await actualizarOrdenes();
+            }
+            });
+            async function actualizarOrdenes(){
+                const ids=obtenerIdsDeElementos();
+               await enviarIds(ids);
+            }
+            function obtenerIdsDeElementos(){
+                const ids= $("tbody tr").map(function(){
+                return $(this).attr("rowId");
+                })
+                return $(ids).toArray();
+            }
+            async function enviarIds(ids){
+                let data= JSON.stringify(ids);
+                var response= fetch(urlOrdenar,{
+                    method:"POST",
+                    body:data,
+                    headers:{
+                        "Content-Type":"application/json"
+                    }
+                })
+            }
+        })
+    </script>
+}

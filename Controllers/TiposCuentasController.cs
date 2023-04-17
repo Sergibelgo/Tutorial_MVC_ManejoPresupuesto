@@ -79,5 +79,10 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             //Si esta bien se devuelve true directamente
             return Json(true);
         }
+        [HttpPost]
+        public async Task<IActionResult> Ordenar([FromBody] int[] ids)
+        {
+            return Ok();
+        }
     }
 }
