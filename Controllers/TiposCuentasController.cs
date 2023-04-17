@@ -82,6 +82,15 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         [HttpPost]
         public async Task<IActionResult> Ordenar([FromBody] int[] ids)
         {
+            var tiposCuentas = await _tiposCuentasServices.GetAll();
+            var idsTiposCuentas = tiposCuentas.Select(x => x.Id).ToList();
+            if (idsTiposCuentas.Count() != ids.Count())
+            {
+                return Forbid();
+            }
+            Console.WriteLine(ids[0]);
+            var tiposCuentasOrdenados = ids.Select((valor, indice) => new TipoCuenta() { Id = valor, Orden = indice + 1 }).AsEnumerable();
+            await _tiposCuentasServices.Ordenar(tiposCuentasOrdenados);
             return Ok();
         }
     }
