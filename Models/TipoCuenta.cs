@@ -14,21 +14,21 @@ namespace Tutorial2ManejoPresupuesto.Models
         [PrimeraLetraMayuscula]
         public string Nombre { get; set; }
         public int Orden { get; set; }
-        //permite cambiar cosas
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (Nombre!=null && Nombre.Length>0)
-            {
-                var primeraLetra = Nombre[0].ToString();
-                if (primeraLetra!=primeraLetra.ToUpper())
-                {
-                    yield return new ValidationResult("La primera letra debe ser mayúscula", new[] { nameof(Nombre) });
-                }
-                else
-                {
-                    yield return ValidationResult.Success;
-                }
-            }
-        }
+        //permite cambiar las reglas de validacion del modelo
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //    if (Nombre!=null && Nombre.Length>0)
+        //    {
+        //        var primeraLetra = Nombre[0].ToString();
+        //        if (primeraLetra!=primeraLetra.ToUpper())
+        //        {
+        //            yield return new ValidationResult("La primera letra debe ser mayúscula", new[] { nameof(Nombre) });
+        //        }
+        //        else
+        //        {
+        //            yield return ValidationResult.Success;
+        //        }
+        //    }
+        //}
     }
 }
