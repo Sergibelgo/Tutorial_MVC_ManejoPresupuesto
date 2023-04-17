@@ -8,12 +8,15 @@ namespace Tutorial2ManejoPresupuesto.Controllers
 {
     public class TiposCuentasController : Controller
     {
-        public TiposCuentasController(ITiposCuentasService tiposCuentasServices)
+        private readonly ITiposCuentasService _tiposCuentasServices;
+        private readonly IUsuariosService _usuariosService;
+        public TiposCuentasController(ITiposCuentasService tiposCuentasServices, IUsuariosService usuariosService)
         {
             _tiposCuentasServices = tiposCuentasServices;
+            _usuariosService = usuariosService;
         }
 
-        public ITiposCuentasService _tiposCuentasServices { get; }
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -24,6 +27,28 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         public IActionResult Crear()
         {
             return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> Editar(int id)
+        {
+            var tipoCuenta = await _tiposCuentasServices.GetTipoCuentaById(id);
+            if (tipoCuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            return View(tipoCuenta);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Editar(TipoCuenta tipoCuenta)
+        {
+            var tipoCuentaExiste = await _tiposCuentasServices.GetTipoCuentaById(tipoCuenta.Id);
+            if (tipoCuentaExiste is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            await _tiposCuentasServices.Update(tipoCuenta);
+            return RedirectToAction("Index");
+
         }
         [HttpPost]
         public async Task<IActionResult> Crear(TipoCuenta tipoCuenta)
