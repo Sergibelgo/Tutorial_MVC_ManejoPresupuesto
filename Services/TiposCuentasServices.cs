@@ -27,5 +27,10 @@ namespace Tutorial2ManejoPresupuesto.Services
             var existe = await connection.QueryFirstOrDefaultAsync<int>(@"SELECT 1 FROM TiposCuentas WHERE Nombre=@Nombre", new { nombre });
             return existe == 1;
         }
+        public async Task<IEnumerable<TipoCuenta>> GetAll()
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryAsync<TipoCuenta>("SELECT * FROM TiposCuentas");
+        }
     }
 }
