@@ -1,3 +1,5 @@
+using Tutorial2ManejoPresupuesto.Services;
+
 namespace Tutorial2ManejoPresupuesto
 {
     public class Program
@@ -8,7 +10,7 @@ namespace Tutorial2ManejoPresupuesto
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddTransient<ITiposCuentasServices, TiposCuentasServices>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
