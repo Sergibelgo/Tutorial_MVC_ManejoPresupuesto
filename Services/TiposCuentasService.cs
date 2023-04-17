@@ -32,5 +32,15 @@ namespace Tutorial2ManejoPresupuesto.Services
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryAsync<TipoCuenta>("SELECT * FROM TiposCuentas");
         }
+        public async Task Update(TipoCuenta tipoCuenta)
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync(@"UPDATE TiposCuentas SET Nombre=@Nombre WHERE Id=@Id", tipoCuenta);
+        }
+        public async Task<TipoCuenta> GetTipoCuentaById(int id)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryFirstOrDefaultAsync<TipoCuenta>(@"SELECT * FROM TiposCuentas WHERE Id=@Id", new { id });
+        }
     }
 }

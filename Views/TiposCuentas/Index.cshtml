@@ -7,19 +7,19 @@
 <a asp-action="Crear" asp-controller="TiposCuentas" class="btn btn-primary mb-3">Crear nuevo</a>
 <table class="table">
     <thead>
-        <th>
-            Acciones
-        </th>
-        <th>
-            Nombre
-        </th>
+    <th>
+        Acciones
+    </th>
+    <th>
+        Nombre
+    </th>
     </thead>
     <tbody>
-        @foreach(var tipo in Model)
+        @foreach (var tipo in Model)
         {
             <tr>
                 <td>
-                    <a class="btn btn-primary">Editar</a>
+                    <a class="btn btn-primary" asp-action="Editar" asp-route-id="@tipo.Id">Editar</a>
                     <a class="btn btn-danger">Borrar</a>
                 </td>
                 <td>
