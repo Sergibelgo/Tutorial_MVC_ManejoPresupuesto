@@ -14,7 +14,12 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         }
 
         public ITiposCuentasServices _tiposCuentasServices { get; }
-
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var tiposCuentas = await _tiposCuentasServices.GetAll();
+            return View(tiposCuentas);
+        }
         [HttpGet]
         public IActionResult Crear()
         {
@@ -34,7 +39,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
                 return View(tipoCuenta);
             }
             await _tiposCuentasServices.Crear(tipoCuenta);
-            return View();
+            return RedirectToAction("Index");
         }
         [HttpGet]
         //Esto sirve para usar la propiedad [Remote(action:"nombrePeticion",controller:"controladorDondeEsta")] que verificara el formulario
