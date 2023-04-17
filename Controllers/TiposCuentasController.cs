@@ -21,13 +21,13 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Crear(TipoCuenta tipoCuenta)
+        public async Task<IActionResult> Crear(TipoCuenta tipoCuenta)
         {
             if (!ModelState.IsValid)
             {
                 return View(tipoCuenta);
             }
-            _tiposCuentasServices.Crear(tipoCuenta);
+            await _tiposCuentasServices.Crear(tipoCuenta);
             return View();
         }
     }
