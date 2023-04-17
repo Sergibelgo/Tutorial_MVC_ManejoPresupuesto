@@ -10,7 +10,8 @@ namespace Tutorial2ManejoPresupuesto
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddTransient<ITiposCuentasServices, TiposCuentasServices>();
+            builder.Services.AddTransient<ITiposCuentasService, TiposCuentasService>();
+            builder.Services.AddTransient<IUsuariosService, UsuariosService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

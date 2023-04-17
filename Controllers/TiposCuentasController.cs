@@ -8,12 +8,12 @@ namespace Tutorial2ManejoPresupuesto.Controllers
 {
     public class TiposCuentasController : Controller
     {
-        public TiposCuentasController(ITiposCuentasServices tiposCuentasServices)
+        public TiposCuentasController(ITiposCuentasService tiposCuentasServices)
         {
             _tiposCuentasServices = tiposCuentasServices;
         }
 
-        public ITiposCuentasServices _tiposCuentasServices { get; }
+        public ITiposCuentasService _tiposCuentasServices { get; }
         [HttpGet]
         public async Task<IActionResult> Index()
         {
