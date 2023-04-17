@@ -50,6 +50,27 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             return RedirectToAction("Index");
 
         }
+        [HttpGet]
+        public async Task<IActionResult> DeleteCon(int Id)
+        {
+            var tipoCuenta = await _tiposCuentasServices.GetTipoCuentaById(Id);
+            if (tipoCuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            return View(tipoCuenta);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(int Id)
+        {
+            var tipoCuenta = await _tiposCuentasServices.GetTipoCuentaById(Id);
+            if (tipoCuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            await _tiposCuentasServices.Delete(Id);
+            return RedirectToAction("Index");
+        }
         [HttpPost]
         public async Task<IActionResult> Crear(TipoCuenta tipoCuenta)
         {
