@@ -28,7 +28,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         {
             using var connection = new SqlConnection(connectionString);
 
-            return await connection.QueryAsync<Cuenta>(@"SELECT C.Id,C.Balance,C.UserId, T.Nombre as TipoCuenta,T.Id as TipoCuentaId
+            return await connection.QueryAsync<Cuenta>(@"SELECT C.Id,C.Balance,C.UserId,C.Descripcion, T.Nombre as TipoCuenta,T.Id as TipoCuentaId
                                                             FROM Cuentas C,TiposCuentas T
                                                             WHERE C.UserId=@userId and C.TipoCuentaId=T.Id",new { userId });
         }
