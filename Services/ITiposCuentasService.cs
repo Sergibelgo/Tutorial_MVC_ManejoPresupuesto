@@ -10,5 +10,6 @@ namespace Tutorial2ManejoPresupuesto.Services
         Task Update(TipoCuenta tipoCuenta);
         Task<TipoCuenta> GetTipoCuentaById(int id);
         Task Delete(int Id);
+        Task Ordenar(IEnumerable<TipoCuenta> lista);
     }
 }

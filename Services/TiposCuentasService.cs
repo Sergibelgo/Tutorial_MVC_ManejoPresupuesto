@@ -17,7 +17,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         {
 
             using var connection = new SqlConnection(connectionString);
-            var id = await connection.QuerySingleAsync<int>($@"INSERT INTO TiposCuentas(Nombre,Orden) VALUES(@Nombre,0);
+            var id = await connection.QuerySingleAsync<int>($@"INSERT INTO TiposCuentas(Nombre,Orden) VALUES(@Nombre,(SELECT MAX(Orden)+1 FROM TiposCuentas));
                                                     SELECT SCOPE_IDENTITY();", tipoCuenta);
             tipoCuenta.Id = id;
         }
@@ -30,7 +30,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         public async Task<IEnumerable<TipoCuenta>> GetAll()
         {
             using var connection = new SqlConnection(connectionString);
-            return await connection.QueryAsync<TipoCuenta>("SELECT * FROM TiposCuentas");
+            return await connection.QueryAsync<TipoCuenta>("SELECT * FROM TiposCuentas ORDER BY Orden");
         }
         public async Task Update(TipoCuenta tipoCuenta)
         {
@@ -46,6 +46,11 @@ namespace Tutorial2ManejoPresupuesto.Services
         {
             using var connection = new SqlConnection(connectionString);
             await connection.ExecuteAsync(@"DELETE TiposCuentas WHERE Id=@Id", new { Id });
+        public async Task Ordenar(IEnumerable<TipoCuenta> lista)
+        {
+            var query = "UPDATE TiposCuentas SET Orden=@Orden WHERE Id=@Id";
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync(query, lista);
         }
     }
 }
