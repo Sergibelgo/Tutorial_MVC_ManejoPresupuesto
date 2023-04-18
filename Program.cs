@@ -12,6 +12,7 @@ namespace Tutorial2ManejoPresupuesto
             builder.Services.AddControllersWithViews();
             builder.Services.AddTransient<ITiposCuentasService, TiposCuentasService>();
             builder.Services.AddTransient<IUsuariosService, UsuariosService>();
+            builder.Services.AddTransient<ICuentasService, CuentasService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
