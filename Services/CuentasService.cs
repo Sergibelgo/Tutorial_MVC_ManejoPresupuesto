@@ -7,6 +7,7 @@ namespace Tutorial2ManejoPresupuesto.Services
     public interface ICuentasService
     {
         Task Crear(Cuenta cuenta);
+        Task<IEnumerable<Cuenta>> GetByUserId(int userId);
     }
     public class CuentasService : ICuentasService
     {
@@ -22,6 +23,14 @@ namespace Tutorial2ManejoPresupuesto.Services
                                                             VALUES(@TipoCuentaId,@Descripcion,@Balance,@UsuarioId);
                                                         SELECT SCOPE_IDENTITY();", cuenta);
             cuenta.Id = id;
+        }
+        public async Task<IEnumerable<Cuenta>> GetByUserId(int userId)
+        {
+            using var connection = new SqlConnection(connectionString);
+
+            return await connection.QueryAsync<Cuenta>(@"SELECT C.Id,C.Balance,C.UserId, T.Nombre as TipoCuenta,T.Id as TipoCuentaId
+                                                            FROM Cuentas C,TiposCuentas T
+                                                            WHERE C.UserId=@userId and C.TipoCuentaId=T.Id",new { userId });
         }
     }
 }

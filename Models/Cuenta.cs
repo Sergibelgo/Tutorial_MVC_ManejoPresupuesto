@@ -6,6 +6,7 @@ namespace Tutorial2ManejoPresupuesto.Models
     public class Cuenta
     {
         public int Id { get; set; }
+        public string TipoCuenta { get; set; }
         [Required]
         [Display(Name = "Tipo Cuenta")]
         public int TipoCuentaId { get; set; }
