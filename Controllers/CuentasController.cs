@@ -16,9 +16,16 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             _usuariosService = usuariosService;
             _cuentasService = cuentasService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            int userId = _usuariosService.GetUsuario();
+            var cuentasConTipoCuenta = await _cuentasService.GetByUserId(userId);
+            var modelo = cuentasConTipoCuenta.GroupBy(x => x.TipoCuenta).Select(grupo => new IndiceCuentasDTO
+            {
+                TipoCuenta = grupo.Key,
+                Cuentas = grupo.AsEnumerable()
+            }).ToList();
+            return View(modelo);
         }
         [HttpGet]
         public async Task<IActionResult> Crear()
