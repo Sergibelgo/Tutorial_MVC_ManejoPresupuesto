@@ -1,0 +1,26 @@
+﻿
+.contenedor-totales {
+    display: flex;
+    justify-content: space-around;
+    font-size: 26px;
+    text-align: center;
+}
+
+.activo {
+    color: blue;
+}
+
+.pasivo {
+    color: red;
+}
+
+.acordeon-cuentas button > span {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.acordeon-cuentas ul li {
+    display: flex;
+    justify-content: space-around;
+}
