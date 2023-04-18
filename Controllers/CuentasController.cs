@@ -50,6 +50,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
                 return RedirectToAction("NoEncontrado", "Home");
             }
             await _cuentasService.Crear(cuenta);
+
             return RedirectToAction("Index");
         }
         private async Task<IEnumerable<SelectListItem>> ObtenerTiposCuentas()
