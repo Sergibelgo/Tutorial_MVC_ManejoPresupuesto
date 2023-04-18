@@ -42,6 +42,10 @@ namespace Tutorial2ManejoPresupuesto.Services
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryFirstOrDefaultAsync<TipoCuenta>(@"SELECT * FROM TiposCuentas WHERE Id=@Id", new { id });
         }
+        public async Task Delete(int Id)
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync(@"DELETE TiposCuentas WHERE Id=@Id", new { Id });
         public async Task Ordenar(IEnumerable<TipoCuenta> lista)
         {
             var query = "UPDATE TiposCuentas SET Orden=@Orden WHERE Id=@Id";

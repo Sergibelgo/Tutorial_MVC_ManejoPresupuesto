@@ -20,7 +20,7 @@
             <tr rowId="@tipo.Id">
                 <td>
                     <a class="btn btn-primary" asp-action="Editar" asp-route-id="@tipo.Id">Editar</a>
-                    <a class="btn btn-danger">Borrar</a>
+                    <a class="btn btn-danger" asp-action="DeleteCon" asp-route-id="@tipo.Id">Borrar</a>
                 </td>
                 <td>
                     @tipo.Nombre
