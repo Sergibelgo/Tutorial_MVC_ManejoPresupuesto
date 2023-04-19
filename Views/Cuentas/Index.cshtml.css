@@ -1,7 +1,7 @@
 ﻿
 .contenedor-totales {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     font-size: 26px;
     text-align: center;
 }
@@ -22,5 +22,5 @@
 
 .acordeon-cuentas ul li {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
