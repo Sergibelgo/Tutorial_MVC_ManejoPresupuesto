@@ -8,7 +8,9 @@ namespace Tutorial2ManejoPresupuesto.Models
         [Required(ErrorMessage ="El campo {0} es requerido")]
         [StringLength(maximumLength:50,ErrorMessage ="No puede ser mayor a {1} caracteres")]
         public string Nombre { get; set; }
-        public TipoOperacion TipoOperacion { get; set; }
-        public int UserId { get; set; }
+        [Required]
+        [Display(Name ="Tipo de operacion")]
+        public TipoOperacion TipoOperacionId { get; set; }
+        public int UsuarioId { get; set; }
     }
 }
