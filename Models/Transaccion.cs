@@ -16,6 +16,7 @@ namespace Tutorial2ManejoPresupuesto.Models
         [Range(1,maximum:int.MaxValue, ErrorMessage = "Debe seleccionar una categoría")]
         public int CuentaId { get; set; }
         [Range(1,maximum:int.MaxValue,ErrorMessage ="Debe seleccionar una categoría")]
+        [Display(Name ="Categoria")]
         public int CategoriaId { get; set; }
     }
 }
