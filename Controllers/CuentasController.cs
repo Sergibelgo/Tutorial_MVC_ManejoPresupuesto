@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Tutorial2ManejoPresupuesto.Models;
 using Tutorial2ManejoPresupuesto.Services;
@@ -7,14 +8,18 @@ namespace Tutorial2ManejoPresupuesto.Controllers
 {
     public class CuentasController : Controller
     {
+        private readonly IMapper mapper;
+
         public ITiposCuentasService _tiposCuentasService { get; set; }
         public IUsuariosService _usuariosService { get; set; }
         public ICuentasService _cuentasService { get; set; }
-        public CuentasController(ITiposCuentasService tiposCuentasService, IUsuariosService usuariosService, ICuentasService cuentasService)
+        public CuentasController(ITiposCuentasService tiposCuentasService, IUsuariosService usuariosService, ICuentasService cuentasService,IMapper mapper)
         {
             _tiposCuentasService = tiposCuentasService;
             _usuariosService = usuariosService;
             _cuentasService = cuentasService;
+            //Mapper
+            this.mapper = mapper;
         }
         public async Task<IActionResult> Index()
         {
@@ -60,14 +65,8 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             {
                 return RedirectToAction("NoEncontrado", "Home");
             }
-            var modelo = new CuentaDTO()
-            {
-                Id = cuenta.Id,
-                Descripcion = cuenta.Descripcion,
-                TipoCuentaId = cuenta.TipoCuentaId,
-                Balance = cuenta.Balance
-
-            };
+            //Usar automapper
+            var modelo = mapper.Map<CuentaDTO>(cuenta);
             modelo.TiposCuentas = await ObtenerTiposCuentas();
             return View(modelo);
         }

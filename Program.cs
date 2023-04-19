@@ -13,6 +13,9 @@ namespace Tutorial2ManejoPresupuesto
             builder.Services.AddTransient<ITiposCuentasService, TiposCuentasService>();
             builder.Services.AddTransient<IUsuariosService, UsuariosService>();
             builder.Services.AddTransient<ICuentasService, CuentasService>();
+            //Añadir y configurar automapper mirar el servicio AutoMapperProfiles
+            builder.Services.AddAutoMapper(typeof(Program));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
