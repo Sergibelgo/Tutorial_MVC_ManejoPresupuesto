@@ -53,10 +53,45 @@ namespace Tutorial2ManejoPresupuesto.Controllers
 
             return RedirectToAction("Index");
         }
+        public async Task<IActionResult> Editar(int id)
+        {
+            var cuenta = await _cuentasService.GetById(id);
+            if (cuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            var modelo = new CuentaDTO()
+            {
+                Id = cuenta.Id,
+                Descripcion = cuenta.Descripcion,
+                TipoCuentaId = cuenta.TipoCuentaId,
+                Balance = cuenta.Balance
+
+            };
+            modelo.TiposCuentas = await ObtenerTiposCuentas();
+            return View(modelo);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Editar(CuentaDTO cuentaEditar)
+        {
+            var cuenta = await _cuentasService.GetById(cuentaEditar.Id);
+            if (cuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            var tipoCuenta = await _tiposCuentasService.GetTipoCuentaById(cuentaEditar.TipoCuentaId);
+            if (tipoCuenta is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            await _cuentasService.Update(cuentaEditar);
+            return RedirectToAction("Index");
+        }
         private async Task<IEnumerable<SelectListItem>> ObtenerTiposCuentas()
         {
             var tiposCuentas = await _tiposCuentasService.GetAll();
             return tiposCuentas.Select(x => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem(x.Nombre, x.Id.ToString()));
         }
+
     }
 }
