@@ -34,5 +34,11 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             var cuentas= await _cuentasService.GetByUserId(usuarioId);
             return cuentas.Select(x => new SelectListItem(x.Descripcion, x.Id.ToString()));
         }
+        [HttpPost]
+        public async Task<IActionResult> ObtenerCategoriasForm([FromBody]TipoOperacion operacion)
+        {
+            var userId = _usuariosService.GetUsuario();
+            return Ok();
+        }
     }
 }

@@ -28,7 +28,7 @@
     </div>
     <div class="mb-3">
         <label asp-for="Monto" class="form-label"></label>
-        <input asp-for="Monto"  class="form-control"></input>
+        <input asp-for="Monto" class="form-control"></input>
         <span asp-validation-for="Monto" class="text-danger"></span>
     </div>
     <div class="mb-3">
@@ -41,4 +41,22 @@
 </form>
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(() => {
+            const url=;
+            $("#TipoOperacionId").on("change",async function(){
+                    const valorSelec= $(this).val();
+
+                    const respuesta = await fetch(,{
+                        method:"POST",
+                        body: valorSelec,
+                        headers:{
+                            "Content-Type":"application/json"
+                        }
+                    })
+                    const json= await respuesta.json();
+                    console.log(json);
+            })
+        })
+    </script>
 }
