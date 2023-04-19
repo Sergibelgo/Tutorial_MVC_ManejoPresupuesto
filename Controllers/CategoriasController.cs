@@ -31,9 +31,9 @@ namespace Tutorial2ManejoPresupuesto.Controllers
                 return View(categoria);
             }
             var usuarioId = _usuariosService.GetUsuario();
-            categoria.UserId = usuarioId;
+            categoria.UsuarioId = usuarioId;
             await _categoriasService.Create(categoria);
-            return RedirectToAction("Inedx");
+            return RedirectToAction("Inedex");
         }
     }
 }
