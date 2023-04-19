@@ -13,7 +13,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         public ITiposCuentasService _tiposCuentasService { get; set; }
         public IUsuariosService _usuariosService { get; set; }
         public ICuentasService _cuentasService { get; set; }
-        public CuentasController(ITiposCuentasService tiposCuentasService, IUsuariosService usuariosService, ICuentasService cuentasService,IMapper mapper)
+        public CuentasController(ITiposCuentasService tiposCuentasService, IUsuariosService usuariosService, ICuentasService cuentasService, IMapper mapper)
         {
             _tiposCuentasService = tiposCuentasService;
             _usuariosService = usuariosService;
@@ -84,6 +84,29 @@ namespace Tutorial2ManejoPresupuesto.Controllers
                 return RedirectToAction("NoEncontrado", "Home");
             }
             await _cuentasService.Update(cuentaEditar);
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public async Task<IActionResult> Borrar(int id)
+        {
+            var usuarioId = _usuariosService.GetUsuario();
+            var cuenta = await _cuentasService.GetById(id);
+            if (cuenta is null || cuenta.UsuarioId != usuarioId)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            return View(cuenta);
+        }
+        [HttpPost]
+        public async Task<IActionResult> BorrarCuenta(int id)
+        {
+            var usuarioId = _usuariosService.GetUsuario();
+            var cuenta = await _cuentasService.GetById(id);
+            if (cuenta is null || cuenta.UsuarioId != usuarioId)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            await _cuentasService.Delete(id);
             return RedirectToAction("Index");
         }
         private async Task<IEnumerable<SelectListItem>> ObtenerTiposCuentas()

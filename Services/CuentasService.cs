@@ -7,6 +7,7 @@ namespace Tutorial2ManejoPresupuesto.Services
     public interface ICuentasService
     {
         Task Crear(Cuenta cuenta);
+        Task Delete(int id);
         Task<Cuenta> GetById(int id);
         Task<IEnumerable<Cuenta>> GetByUserId(int userId);
         Task Update(CuentaDTO cuentaEditar);
@@ -37,14 +38,20 @@ namespace Tutorial2ManejoPresupuesto.Services
         public async Task<Cuenta> GetById(int id)
         {
             using var connection = new SqlConnection(connectionString);
-            return await connection.QueryFirstOrDefaultAsync<Cuenta>(@"SELECT C.Id,C.Balance,C.UserId,C.Descripcion, T.Nombre as TipoCuenta,T.Id as TipoCuentaId
+            return await connection.QueryFirstOrDefaultAsync<Cuenta>(@"SELECT C.Id,C.Balance,C.UserId as UsuarioId,C.Descripcion, T.Nombre as TipoCuenta,T.Id as TipoCuentaId
                                                             FROM Cuentas C,TiposCuentas T
-                                                            WHERE C.UserId=@id and C.TipoCuentaId=T.Id", new { id });
+                                                            WHERE C.Id=@id and C.TipoCuentaId=T.Id", new { id });
         }
         public async Task Update(CuentaDTO cuentaEditar)
         {
             using var connection = new SqlConnection(connectionString);
-            await connection.ExecuteAsync(@"UPDATE Cuentas SET TipoCuentaId=@TipoCuentaId,Balance=@Balance,Descripcion=@Descripcion WHERE Id=@Id",cuentaEditar);
+            await connection.ExecuteAsync(@"UPDATE Cuentas SET TipoCuentaId=@TipoCuentaId,Balance=@Balance,Descripcion=@Descripcion WHERE Id=@Id", cuentaEditar);
+        }
+        public async Task Delete(int id)
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync(@"DELETE Cuentas WHERE Id=@id", new { id });
+
         }
     }
 }
