@@ -7,7 +7,9 @@ namespace Tutorial2ManejoPresupuesto.Services
     public interface ICategoriasService
     {
         Task Create(Categoria categoria);
+        Task<Categoria> GetById(int id, int usuarioId);
         Task<IEnumerable<Categoria>> GetByUserId(int usuarioId);
+        Task Update(Categoria categoria);
     }
     public class CategoriasService : ICategoriasService
     {
@@ -30,6 +32,16 @@ namespace Tutorial2ManejoPresupuesto.Services
             using var connection = new SqlConnection(this.connectionString);
             return await connection.QueryAsync<Categoria>(@"SELECT * FROM Categorias 
                                                             WHERE UsuarioId=@usuarioId", new { usuarioId });
+        }
+        public async Task<Categoria> GetById(int id, int usuarioId)
+        {
+            using var connection = new SqlConnection(this.connectionString);
+            return await connection.QueryFirstOrDefaultAsync<Categoria>(@"SELECT * FROM Categorias WHERE Id=@Id AND UsuarioId=@UsuarioId", new { id, usuarioId });
+        }
+        public async Task Update(Categoria categoria)
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync(@"UPDATE Categorias SET Nombre = @Nombre,TipoOperacionId=@TipoOperacionId WHERE Id = @Id", categoria);
         }
     }
 }
