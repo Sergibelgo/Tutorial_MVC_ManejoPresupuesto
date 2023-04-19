@@ -14,6 +14,7 @@ namespace Tutorial2ManejoPresupuesto
             builder.Services.AddTransient<IUsuariosService, UsuariosService>();
             builder.Services.AddTransient<ICuentasService, CuentasService>();
             builder.Services.AddTransient<ICategoriasService, CategoriasService>();
+            builder.Services.AddTransient<ITransaccionesService, TransaccionesService>();
             //Añadir y configurar automapper mirar el servicio AutoMapperProfiles
             builder.Services.AddAutoMapper(typeof(Program));
 
