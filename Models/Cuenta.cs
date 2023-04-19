@@ -11,7 +11,9 @@ namespace Tutorial2ManejoPresupuesto.Models
         [Display(Name = "Tipo Cuenta")]
         public int TipoCuentaId { get; set; }
         [Required]
+        [DataType(DataType.Currency)]
         public decimal Balance { get; set; }
+
         [StringLength(maximumLength: 1000)]
         public string Descripcion { get; set; }
         public int UsuarioId { get; set; }
