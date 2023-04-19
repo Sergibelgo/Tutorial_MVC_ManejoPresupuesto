@@ -6,7 +6,9 @@ namespace Tutorial2ManejoPresupuesto.Models
     {
         public int Id { get; set; }
         public int UsuarioId { get; set; }
-        public DateTime FechaTransaccion { get; set; } = DateTime.Now;
+        [Display(Name="Fecha Transaccion")]
+        [DataType(DataType.DateTime)]
+        public DateTime FechaTransaccion { get; set; } = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd hh:MM tt"));
         public decimal Monto { get; set; }
         public int TipoOperacionId { get; set; }
         [StringLength(maximumLength:1000,ErrorMessage ="La nota no puede pasar de {1} caracteres")]
