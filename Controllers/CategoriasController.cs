@@ -14,9 +14,11 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             this._categoriasService = categoriasService;
             this._usuariosService = usuariosService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var usuarioId = _usuariosService.GetUsuario();
+            var categorias = await _categoriasService.GetByUserId(usuarioId);
+            return View(categorias);
         }
         [HttpGet]
         public IActionResult Crear()
@@ -33,7 +35,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             var usuarioId = _usuariosService.GetUsuario();
             categoria.UsuarioId = usuarioId;
             await _categoriasService.Create(categoria);
-            return RedirectToAction("Inedex");
+            return RedirectToAction("Index");
         }
     }
 }
