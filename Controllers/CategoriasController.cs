@@ -65,5 +65,28 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             await _categoriasService.Update(categoriaEditar);
             return RedirectToAction("Index");
         }
+        [HttpGet]
+        public async Task<IActionResult> Borrar(int id)
+        {
+            var userId = _usuariosService.GetUsuario();
+            var categoria = await _categoriasService.GetById(id, userId);
+            if (categoria is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            return View(categoria);
+        }
+        [HttpPost]
+        public async Task<IActionResult> BorrarCategoria(int id)
+        {
+            var userId = _usuariosService.GetUsuario();
+            var categoria = await _categoriasService.GetById(id, userId);
+            if (categoria is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            await _categoriasService.Delete(categoria.Id);
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -7,6 +7,7 @@ namespace Tutorial2ManejoPresupuesto.Services
     public interface ICategoriasService
     {
         Task Create(Categoria categoria);
+        Task Delete(int id);
         Task<Categoria> GetById(int id, int usuarioId);
         Task<IEnumerable<Categoria>> GetByUserId(int usuarioId);
         Task Update(Categoria categoria);
@@ -42,6 +43,11 @@ namespace Tutorial2ManejoPresupuesto.Services
         {
             using var connection = new SqlConnection(connectionString);
             await connection.ExecuteAsync(@"UPDATE Categorias SET Nombre = @Nombre,TipoOperacionId=@TipoOperacionId WHERE Id = @Id", categoria);
+        }
+        public async Task Delete(int id)
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync(@"DELETE FROM Categorias WHERE Id=@id", new { id });
         }
     }
 }
