@@ -6,5 +6,6 @@ namespace Tutorial2ManejoPresupuesto.Models
     {
         public IEnumerable<SelectListItem> Cuentas { get; set; }
         public IEnumerable<SelectListItem> Categorias { get; set; }
+        public int TipoOperacionId { get; set; }
     }
 }
