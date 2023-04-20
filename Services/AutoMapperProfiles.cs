@@ -11,6 +11,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         public AutoMapperProfiles()
         {
             CreateMap<Cuenta,CuentaDTO>();
+            CreateMap<Transaccion,TransaccionDTO>();
         }
     }
 }

@@ -60,7 +60,8 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         }
         public async Task<IActionResult> Editar(int id)
         {
-            var cuenta = await _cuentasService.GetById(id);
+            var userId = _usuariosService.GetUsuario();
+            var cuenta = await _cuentasService.GetById(id,userId);
             if (cuenta is null)
             {
                 return RedirectToAction("NoEncontrado", "Home");
@@ -73,7 +74,8 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(CuentaDTO cuentaEditar)
         {
-            var cuenta = await _cuentasService.GetById(cuentaEditar.Id);
+            var userId = _usuariosService.GetUsuario();
+            var cuenta = await _cuentasService.GetById(cuentaEditar.Id,userId);
             if (cuenta is null)
             {
                 return RedirectToAction("NoEncontrado", "Home");
@@ -90,7 +92,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         public async Task<IActionResult> Borrar(int id)
         {
             var usuarioId = _usuariosService.GetUsuario();
-            var cuenta = await _cuentasService.GetById(id);
+            var cuenta = await _cuentasService.GetById(id,usuarioId);
             if (cuenta is null || cuenta.UsuarioId != usuarioId)
             {
                 return RedirectToAction("NoEncontrado", "Home");
@@ -101,7 +103,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         public async Task<IActionResult> BorrarCuenta(int id)
         {
             var usuarioId = _usuariosService.GetUsuario();
-            var cuenta = await _cuentasService.GetById(id);
+            var cuenta = await _cuentasService.GetById(id,usuarioId);
             if (cuenta is null || cuenta.UsuarioId != usuarioId)
             {
                 return RedirectToAction("NoEncontrado", "Home");

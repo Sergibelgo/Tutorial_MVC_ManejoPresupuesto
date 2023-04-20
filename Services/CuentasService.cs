@@ -8,7 +8,7 @@ namespace Tutorial2ManejoPresupuesto.Services
     {
         Task Crear(Cuenta cuenta);
         Task Delete(int id);
-        Task<Cuenta> GetById(int id);
+        Task<Cuenta> GetById(int id, int userId);
         Task<IEnumerable<Cuenta>> GetByUserId(int userId);
         Task Update(CuentaDTO cuentaEditar);
     }
@@ -35,7 +35,7 @@ namespace Tutorial2ManejoPresupuesto.Services
                                                             FROM Cuentas C,TiposCuentas T
                                                             WHERE C.UserId=@userId and C.TipoCuentaId=T.Id", new { userId });
         }
-        public async Task<Cuenta> GetById(int id)
+        public async Task<Cuenta> GetById(int id,int userId)
         {
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryFirstOrDefaultAsync<Cuenta>(@"SELECT C.Id,C.Balance,C.UserId as UsuarioId,C.Descripcion, T.Nombre as TipoCuenta,T.Id as TipoCuentaId
