@@ -7,6 +7,9 @@
 <table class="table">
     <thead>
     <th>
+        Acciones
+    </th>
+    <th>
         Fecha
     </th>
     <th>
@@ -26,6 +29,9 @@
         @foreach (var transaccion in Model)
         {
             <tr>
+                <td>
+                    <a asp-action="Editar" asp-route-Id="@transaccion.Id" class="btn btn-primary"><i class="bi-pencil-fill"></i></a>
+                </td>
                 <td>
                     @transaccion.FechaTransaccion
                 </td>

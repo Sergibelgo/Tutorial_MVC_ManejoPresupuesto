@@ -11,7 +11,8 @@ namespace Tutorial2ManejoPresupuesto.Services
         public AutoMapperProfiles()
         {
             CreateMap<Cuenta,CuentaDTO>();
-            CreateMap<Transaccion,TransaccionDTO>();
+            //Con reverse map puedes hacer que sea bidireccional el mapeo
+            CreateMap<Transaccion,TransaccionDTO>().ReverseMap();
         }
     }
 }

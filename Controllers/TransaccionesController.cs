@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Transactions;
 using Tutorial2ManejoPresupuesto.Models;
 using Tutorial2ManejoPresupuesto.Services;
 
@@ -68,10 +69,58 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         public async Task<IActionResult> ObtenerCategoriasForm([FromBody] TipoOperacion operacion)
         {
             var userId = _usuariosService.GetUsuario();
-            var categorias = await ObtenerCategorais(userId, operacion);
+            var categorias = await ObtenerCategorias(userId, operacion);
             return Ok(categorias);
         }
-        private async Task<IEnumerable<SelectListItem>> ObtenerCategorais(int usuarioId, TipoOperacion tipoOperacion)
+        [HttpGet]
+        public async Task<IActionResult> Actualizar(int id)
+        {
+            var usuarioId = _usuariosService.GetUsuario();
+            var transaccion = await _transaccionesService.GetById(id, usuarioId);
+            if (transaccion is null)
+            {
+                return View("NoEncontrado", "Home");
+            }
+            var modelo = mapper.Map<TransaccionDTO>(transaccion);
+            if (modelo.TipoOperacionId == (int)TipoOperacion.Gasto)
+            {
+                modelo.MontoAnterior = modelo.Monto * -1;
+            }
+            modelo.CuentaAnteriorId = transaccion.CuentaId;
+            modelo.Categorias = await ObtenerCategorias(usuarioId, (TipoOperacion)transaccion.TipoOperacionId);
+            modelo.Cuentas = await ObtenerCuentas(usuarioId);
+            return View(modelo);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Editar(TransaccionDTO modelo)
+        {
+            var usuarioId = _usuariosService.GetUsuario();
+            if (!ModelState.IsValid)
+            {
+                modelo.Categorias = await ObtenerCategorias(usuarioId, (TipoOperacion)modelo.TipoOperacionId);
+                modelo.Cuentas = await ObtenerCuentas(usuarioId);
+                return View(modelo);
+            }
+            var cuenta = await _cuentasService.GetById(modelo.CuentaId, usuarioId);
+            if (cuenta is null)
+            {
+                return View("NoEncontrado", "Home");
+            }
+            var categoria = await _categoriasService.GetById(modelo.CategoriaId, usuarioId);
+            if (categoria is null)
+            {
+                return View("NoEncontrado", "Home");
+            }
+            var transaccion = mapper.Map<Transaccion>(modelo);
+            modelo.MontoAnterior = modelo.Monto;
+            if (modelo.TipoOperacionId == (int)TipoOperacion.Gasto)
+            {
+                transaccion.Monto *= -1;
+            }
+            await _transaccionesService.Actualizar(transaccion, modelo.MontoAnterior, modelo.CuentaAnteriorId);
+            return RedirectToAction("Index");
+        }
+        private async Task<IEnumerable<SelectListItem>> ObtenerCategorias(int usuarioId, TipoOperacion tipoOperacion)
         {
             var categorias = await _categoriasService.GetByOperation(usuarioId, tipoOperacion);
             return categorias.Select(x => new SelectListItem(x.Nombre, x.Id.ToString()));
