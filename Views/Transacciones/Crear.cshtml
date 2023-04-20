@@ -42,21 +42,25 @@
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
     <script>
+        const url = "@Url.Action("ObtenerCategoriasForm")";
         $(() => {
-            const url=;
-            $("#TipoOperacionId").on("change",async function(){
-                    const valorSelec= $(this).val();
 
-                    const respuesta = await fetch(,{
-                        method:"POST",
-                        body: valorSelec,
-                        headers:{
-                            "Content-Type":"application/json"
-                        }
-                    })
-                    const json= await respuesta.json();
-                    console.log(json);
-            })
+            $("#TipoOperacionId").on("change", cargarOperaciones)
+            cargarOperaciones();
         })
+        async function cargarOperaciones() {
+            const valorSelec = $("#TipoOperacionId").val();
+
+            const respuesta = await fetch(url, {
+                method: "POST",
+                body: valorSelec,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            const json = await respuesta.json();
+            const opciones = json.map(categoria => `<option value=${categoria.value}>${categoria.text}</option>`);
+            $("#CategoriaId").html(opciones);
+        }
     </script>
 }
