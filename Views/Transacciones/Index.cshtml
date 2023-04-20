@@ -1,0 +1,48 @@
+﻿@model IEnumerable<TransaccionDTO>
+@{
+    ViewData["title"] = "Index";
+}
+<h1>Transacciones</h1>
+<a class="btn btn-primary" asp-action="Crear">Crear</a>
+<table class="table">
+    <thead>
+    <th>
+        Fecha
+    </th>
+    <th>
+        Monto
+    </th>
+    <th>
+        Nota
+    </th>
+    <th>
+        Cuenta
+    </th>
+    <th>
+        Categoria
+    </th>
+    </thead>
+    <tbody>
+        @foreach (var transaccion in Model)
+        {
+            <tr>
+                <td>
+                    @transaccion.FechaTransaccion
+                </td>
+                <td>
+                    @transaccion.Monto
+                </td>
+                <td>
+                    @transaccion.Nota
+
+                </td>
+                <td>
+                    @transaccion.cuenta.Descripcion
+                </td>
+                <td>
+                    @transaccion.categoria.Nombre
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -38,6 +38,6 @@ BEGIN
 	UPDATE Cuentas
 	SET Balance +=@Monto
 	Where Id=@CuentaId
-
+	select SCOPE_IDENTITY()
 END
 GO
