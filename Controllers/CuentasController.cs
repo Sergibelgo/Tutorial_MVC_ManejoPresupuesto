@@ -142,7 +142,13 @@ namespace Tutorial2ManejoPresupuesto.Controllers
                 FechaInicio = fechaInicio,
                 FechaFin = fechaFin
             };
-            var transacciones = _transaccionesService.ObtenerPorCuentaId(obtenerTransacciones);
+            ViewBag.NombreCuenta = cuenta.Descripcion;
+            ViewBag.mesAnterior = fechaInicio.AddMonths(-1).Month;
+            ViewBag.añoAnterior = fechaInicio.AddMonths(-1).Year;
+            ViewBag.mesPosterior = fechaInicio.AddMonths(1).Month;
+            ViewBag.añoPosterior = fechaInicio.AddMonths(1).Year;
+            ViewBag.fechaActual = fechaInicio;
+            var transacciones =await  _transaccionesService.ObtenerPorCuentaId(obtenerTransacciones);
             
             return View(transacciones);
         }
