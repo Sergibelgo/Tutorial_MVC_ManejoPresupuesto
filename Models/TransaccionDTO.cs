@@ -8,6 +8,7 @@ namespace Tutorial2ManejoPresupuesto.Models
         public IEnumerable<SelectListItem> Categorias { get; set; }
         public Cuenta cuenta { get; set; }
         public Categoria categoria { get; set; }
+        public string NombreCategoria { get; set; }
         public int CuentaAnteriorId { get; set; }
         public decimal MontoAnterior { get; set; }
     }
