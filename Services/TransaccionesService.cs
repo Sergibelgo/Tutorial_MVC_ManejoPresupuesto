@@ -11,6 +11,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         Task Crear(Transaccion transaccion);
         Task<Transaccion> GetById(int id, int usuarioId);
         Task<IEnumerable<Transaccion>> GetByUserId(int usuarioId);
+        Task<IEnumerable<Transaccion>> GetByUserId(ParametroObtenerTransaccionesPorUsuario modelo);
         Task<IEnumerable<TransaccionDTO>> ObtenerPorCuentaId(ObtenerTransaccionesPorCuenta modelo);
     }
     public class TransaccionesService : ITransaccionesService
@@ -33,10 +34,19 @@ namespace Tutorial2ManejoPresupuesto.Services
                 transaccion.Nota
             }, commandType: CommandType.StoredProcedure);
         }
-        public async Task<IEnumerable<Transaccion>> GetByUserId(int usuarioId)
+        public async Task<IEnumerable<Transaccion>> GetByUserId(int id)
         {
             using var connection = new SqlConnection(connectionString);
-            return await connection.QueryAsync<Transaccion>(@"SELECT * FROM TRANSACCIONES WHERE UsuarioId=@usuarioId", new { usuarioId });
+            return await connection.QueryAsync<Transaccion>(@"SELECT * FROM TRANSACCIONES WHERE UserId=@id", new {id });
+        }
+        public async Task<IEnumerable<Transaccion>> GetByUserId(ParametroObtenerTransaccionesPorUsuario modelo)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryAsync<Transaccion>(
+                @"SELECT * 
+                  FROM TRANSACCIONES t,INNER JOIN Categorias c on c.Id=t.CategoriaId INNER JOIN Cuentas cu on cu.Id=t.CuentaId
+                WHERE t.UsuarioId=@usuarioId and  FechaTransaccion BETWEEN @FechaInicio AND @FECHAFIN
+                    ORDER BY t.FechaTransaccion DESC", modelo);
         }
         public async Task<IEnumerable<TransaccionDTO>> ObtenerPorCuentaId(ObtenerTransaccionesPorCuenta modelo)
         {
@@ -46,6 +56,7 @@ namespace Tutorial2ManejoPresupuesto.Services
                                                                     WHERE T.CuentaId=@CuentaId and T.UsuarioId=@UsuarioId and T.CategoriaId=C.Id and FechaTransaccion BETWEEN @FechaInicio AND @FECHAFIN"
                                                             , modelo);
         }
+
         public async Task Actualizar(Transaccion transaccion, decimal montoAnterior, int cuentaAnteriorId)
         {
             using var con = new SqlConnection(connectionString);
