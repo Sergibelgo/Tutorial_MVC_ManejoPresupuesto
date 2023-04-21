@@ -40,7 +40,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         public async Task Actualizar(Transaccion transaccion, decimal montoAnterior, int cuentaAnteriorId)
         {
             using var con = new SqlConnection(connectionString);
-            await con.ExecuteAsync("Transacciones_Actualizar", new
+            await con.ExecuteAsync("Transaccion_Actualizar", new
             {
                 transaccion.Id,
                 transaccion.FechaTransaccion,
@@ -57,7 +57,7 @@ namespace Tutorial2ManejoPresupuesto.Services
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryFirstOrDefaultAsync<Transaccion>(@"SELECT T.*,C.TipoOperacionId 
                                                                             FROM TRANSACCIONES T,Categorias C 
-                                                                            WHERE Id=@id AND UsuarioId=@usuarioId AND T.CategoriaId=C.id", 
+                                                                            WHERE T.Id=@id AND T.UsuarioId=@usuarioId AND T.CategoriaId=C.id", 
                                                                             new { id, usuarioId });
         }
     }

@@ -73,7 +73,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             return Ok(categorias);
         }
         [HttpGet]
-        public async Task<IActionResult> Actualizar(int id)
+        public async Task<IActionResult> Editar(int id)
         {
             var usuarioId = _usuariosService.GetUsuario();
             var transaccion = await _transaccionesService.GetById(id, usuarioId);

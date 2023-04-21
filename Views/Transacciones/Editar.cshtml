@@ -3,6 +3,16 @@
     ViewData["title"] = "Edit";
 }
 <h5>Editar</h5>
-<form asp-action="Actualizar">
+<form asp-action="Editar">
     <partial name="_TranForm" />
 </form>
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const url = "@Url.Action("ObtenerCategoriasForm")";
+        $(() => {
+            $("#TipoOperacionId").on("change", cargarOperaciones)
+            cargarOperaciones();
+        })
+    </script>
+}
