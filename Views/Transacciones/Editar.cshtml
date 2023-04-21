@@ -1,10 +1,9 @@
 ﻿@model TransaccionDTO
 @{
-    ViewData["title"] = "Crear";
+    ViewData["title"] = "Edit";
 }
-<h1>Hacer una transacción</h1>
-<h5>Una transacción te permite indicar tus ingresos y gastos</h5>
-<form asp-action="Crear">
+<h5>Editar</h5>
+<form asp-action="Editar">
     <partial name="_TranForm" />
 </form>
 @section Scripts{
@@ -12,10 +11,8 @@
     <script>
         const url = "@Url.Action("ObtenerCategoriasForm")";
         $(() => {
-
             $("#TipoOperacionId").on("change", cargarOperaciones)
             cargarOperaciones();
         })
-        
     </script>
 }
