@@ -10,11 +10,12 @@ namespace Tutorial2ManejoPresupuesto.Controllers
     {
         private readonly IMapper mapper;
         private readonly ITransaccionesService _transaccionesService;
+        private readonly IReporteService _reporteService;
 
         public ITiposCuentasService _tiposCuentasService { get; set; }
         public IUsuariosService _usuariosService { get; set; }
         public ICuentasService _cuentasService { get; set; }
-        public CuentasController(ITiposCuentasService tiposCuentasService, IUsuariosService usuariosService, ICuentasService cuentasService, IMapper mapper, ITransaccionesService transaccionesService)
+        public CuentasController(ITiposCuentasService tiposCuentasService, IUsuariosService usuariosService, ICuentasService cuentasService, IMapper mapper, ITransaccionesService transaccionesService, IReporteService reporteService)
         {
             _tiposCuentasService = tiposCuentasService;
             _usuariosService = usuariosService;
@@ -22,6 +23,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             //Mapper
             this.mapper = mapper;
             _transaccionesService = transaccionesService;
+            this._reporteService = reporteService;
         }
         public async Task<IActionResult> Index()
         {
@@ -123,33 +125,8 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             {
                 return RedirectToAction("NoEncontrado", "Home");
             }
-            DateTime fechaInicio;
-            DateTime fechaFin;
-            if (mes <= 0 || mes > 12 || año <= 1900)
-            {
-                var hoy = DateTime.Today;
-                fechaInicio = new DateTime(hoy.Year, hoy.Month, 1);
-            }
-            else
-            {
-                fechaInicio = new DateTime(año, mes, 1);
-            }
-            fechaFin = fechaInicio.AddMonths(1).AddDays(-1);
-            var obtenerTransacciones = new ObtenerTransaccionesPorCuenta()
-            {
-                CuentaId = id,
-                UsuarioId = usuarioId,
-                FechaInicio = fechaInicio,
-                FechaFin = fechaFin
-            };
             ViewBag.NombreCuenta = cuenta.Descripcion;
-            ViewBag.mesAnterior = fechaInicio.AddMonths(-1).Month;
-            ViewBag.añoAnterior = fechaInicio.AddMonths(-1).Year;
-            ViewBag.mesPosterior = fechaInicio.AddMonths(1).Month;
-            ViewBag.añoPosterior = fechaInicio.AddMonths(1).Year;
-            ViewBag.fechaActual = fechaInicio;
-            var transacciones =await  _transaccionesService.ObtenerPorCuentaId(obtenerTransacciones);
-            
+            var transacciones = await _reporteService.ObtenerReporteTransaccionesDetalladasPorCuenta(usuarioId, cuenta.Id, mes, año, ViewBag);
             return View(transacciones);
         }
         private async Task<IEnumerable<SelectListItem>> ObtenerTiposCuentas()

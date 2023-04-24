@@ -1,0 +1,70 @@
+﻿using Tutorial2ManejoPresupuesto.Models;
+
+namespace Tutorial2ManejoPresupuesto.Services
+{
+    public interface IReporteService
+    {
+        Task<IEnumerable<TransaccionDTO>> ObtenerReporteTransaccionesDetalladas(int usuarioId, int mes, int año, dynamic ViewBag);
+        Task<IEnumerable<TransaccionDTO>> ObtenerReporteTransaccionesDetalladasPorCuenta(int usuarioId, int cuentaId, int mes, int año, dynamic ViewBag);
+    }
+    public class ReporteService : IReporteService
+    {
+        private readonly ITransaccionesService _transaccionesService;
+
+        public ReporteService(ITransaccionesService transaccionesService)
+        {
+            this._transaccionesService = transaccionesService;
+        }
+        public async Task<IEnumerable<TransaccionDTO>> ObtenerReporteTransaccionesDetalladas(int usuarioId, int mes, int año, dynamic ViewBag)
+        {
+            (DateTime fechaInicio, DateTime fechaFin) = GenerarFechaInicioFechaFin(mes, año);
+            var parametro = new ParametroObtenerTransaccionesPorUsuario()
+            {
+                UsuarioId = usuarioId,
+                FechaInicio = fechaInicio,
+                FechaFin = fechaFin
+            };
+            var transacciones = await _transaccionesService.GetByUserId(parametro);
+            AsignarValoresViewBag(ViewBag, fechaInicio);
+            return transacciones;
+        }
+        public async Task<IEnumerable<TransaccionDTO>> ObtenerReporteTransaccionesDetalladasPorCuenta(int usuarioId, int cuentaId, int mes, int año, dynamic ViewBag)
+        {
+            (DateTime fechaInicio, DateTime fechaFin) = GenerarFechaInicioFechaFin(mes, año);
+            var obtenerTransacciones = new ObtenerTransaccionesPorCuenta()
+            {
+                CuentaId = cuentaId,
+                UsuarioId = usuarioId,
+                FechaInicio = fechaInicio,
+                FechaFin = fechaFin
+            };
+            var transacciones = await _transaccionesService.ObtenerPorCuentaId(obtenerTransacciones);
+            AsignarValoresViewBag(ViewBag, fechaInicio);
+            return transacciones;
+        }
+        private (DateTime fechaInicio, DateTime fechaFin) GenerarFechaInicioFechaFin(int mes, int ano)
+        {
+            DateTime fechaInicio;
+            DateTime fechaFin;
+            if (mes <= 0 || mes > 12 || ano <= 1900)
+            {
+                var hoy = DateTime.Today;
+                fechaInicio = new DateTime(hoy.Year, hoy.Month, 1);
+            }
+            else
+            {
+                fechaInicio = new DateTime(ano, mes, 1);
+            }
+            fechaFin = fechaInicio.AddMonths(1).AddDays(-1);
+            return (fechaInicio, fechaFin);
+        }
+        private static void AsignarValoresViewBag(dynamic ViewBag, DateTime fechaInicio)
+        {
+            ViewBag.mesAnterior = fechaInicio.AddMonths(-1).Month;
+            ViewBag.añoAnterior = fechaInicio.AddMonths(-1).Year;
+            ViewBag.mesPosterior = fechaInicio.AddMonths(1).Month;
+            ViewBag.añoPosterior = fechaInicio.AddMonths(1).Year;
+            ViewBag.fechaActual = fechaInicio;
+        }
+    }
+}

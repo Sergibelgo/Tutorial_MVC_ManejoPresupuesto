@@ -14,42 +14,21 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         private readonly ICuentasService _cuentasService;
         private readonly ICategoriasService _categoriasService;
         private readonly IMapper mapper;
+        private readonly IReporteService _reporteService;
 
-        public TransaccionesController(ITransaccionesService transaccionesService, IUsuariosService usuariosService, ICuentasService cuentasService, ICategoriasService categoriasService, IMapper mapper)
+        public TransaccionesController(ITransaccionesService transaccionesService, IUsuariosService usuariosService, ICuentasService cuentasService, ICategoriasService categoriasService, IMapper mapper, IReporteService reporteService)
         {
             this._transaccionesService = transaccionesService;
             this._usuariosService = usuariosService;
             this._cuentasService = cuentasService;
             this._categoriasService = categoriasService;
             this.mapper = mapper;
+            this._reporteService = reporteService;
         }
         public async Task<IActionResult> Index(int mes, int año)
         {
             var usuarioId = _usuariosService.GetUsuario();
-            DateTime fechaInicio;
-            DateTime fechaFin;
-            if (mes <= 0 || mes > 12 || año <= 1900)
-            {
-                var hoy = DateTime.Today;
-                fechaInicio = new DateTime(hoy.Year, hoy.Month, 1);
-            }
-            else
-            {
-                fechaInicio = new DateTime(año, mes, 1);
-            }
-            fechaFin = fechaInicio.AddMonths(1).AddDays(-1);
-            var parametro = new ParametroObtenerTransaccionesPorUsuario()
-            {
-                UsuarioId = usuarioId,
-                FechaInicio = fechaInicio,
-                FechaFin = fechaFin
-            };
-            var transacciones = await _transaccionesService.GetByUserId(parametro);
-            ViewBag.mesAnterior = fechaInicio.AddMonths(-1).Month;
-            ViewBag.añoAnterior = fechaInicio.AddMonths(-1).Year;
-            ViewBag.mesPosterior = fechaInicio.AddMonths(1).Month;
-            ViewBag.añoPosterior = fechaInicio.AddMonths(1).Year;
-            ViewBag.fechaActual = fechaInicio;
+            var transacciones = await _reporteService.ObtenerReporteTransaccionesDetalladas(usuarioId, mes, año, ViewBag);
             ViewBag.urlRetorno = HttpContext.Request.Path + HttpContext.Request.QueryString;
             return View(transacciones);
         }
