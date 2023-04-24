@@ -16,6 +16,9 @@
     <th>
         Monto
     </th>
+    <th>
+        Fecha
+    </th>
     </thead>
     <tbody>
         @foreach (var transaccion in Model)
@@ -32,6 +35,9 @@
                 </td>
                 <td>
                     @transaccion.Monto
+                </td>
+                <td>
+                    @transaccion.FechaTransaccion.ToShortDateString();
                 </td>
             </tr>
         }
