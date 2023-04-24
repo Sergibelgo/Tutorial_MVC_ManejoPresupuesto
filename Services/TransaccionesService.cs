@@ -11,7 +11,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         Task Crear(Transaccion transaccion);
         Task<Transaccion> GetById(int id, int usuarioId);
         Task<IEnumerable<Transaccion>> GetByUserId(int usuarioId);
-        Task<IEnumerable<Transaccion>> GetByUserId(ParametroObtenerTransaccionesPorUsuario modelo);
+        Task<IEnumerable<TransaccionDTO>> GetByUserId(ParametroObtenerTransaccionesPorUsuario modelo);
         Task<IEnumerable<TransaccionDTO>> ObtenerPorCuentaId(ObtenerTransaccionesPorCuenta modelo);
     }
     public class TransaccionesService : ITransaccionesService
@@ -39,12 +39,12 @@ namespace Tutorial2ManejoPresupuesto.Services
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryAsync<Transaccion>(@"SELECT * FROM TRANSACCIONES WHERE UserId=@id", new {id });
         }
-        public async Task<IEnumerable<Transaccion>> GetByUserId(ParametroObtenerTransaccionesPorUsuario modelo)
+        public async Task<IEnumerable<TransaccionDTO>> GetByUserId(ParametroObtenerTransaccionesPorUsuario modelo)
         {
             using var connection = new SqlConnection(connectionString);
-            return await connection.QueryAsync<Transaccion>(
-                @"SELECT * 
-                  FROM TRANSACCIONES t,INNER JOIN Categorias c on c.Id=t.CategoriaId INNER JOIN Cuentas cu on cu.Id=t.CuentaId
+            return await connection.QueryAsync<TransaccionDTO>(
+                @"SELECT t.*, C.Nombre as NombreCategoria
+                  FROM TRANSACCIONES t INNER JOIN Categorias c on c.Id=t.CategoriaId INNER JOIN Cuentas cu on cu.Id=t.CuentaId
                 WHERE t.UsuarioId=@usuarioId and  FechaTransaccion BETWEEN @FechaInicio AND @FECHAFIN
                     ORDER BY t.FechaTransaccion DESC", modelo);
         }
