@@ -32,8 +32,10 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             ViewBag.urlRetorno = HttpContext.Request.Path + HttpContext.Request.QueryString;
             return View(transacciones);
         }
-        public IActionResult Semanal()
+        public async Task<IActionResult> Semanal(int mes,int año)
         {
+            var usuarioId = _usuariosService.GetUsuario();
+            IEnumerable<ResultadoObtenerPorSemana> transaccionesPorSemana = await _reporteService.ObtenerReporteSemanal(usuarioId, mes, año, ViewBag);
             return View();
         }
         public IActionResult Mensual()
