@@ -30,7 +30,9 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             var usuarioId = _usuariosService.GetUsuario();
             var transacciones = await _reporteService.ObtenerReporteTransaccionesDetalladas(usuarioId, mes, año, ViewBag);
             ViewBag.urlRetorno = HttpContext.Request.Path + HttpContext.Request.QueryString;
-            return View(transacciones);
+            var model = new TransaccionesViewDTO();
+            model.transacciones = transacciones;
+            return View(model);
         }
         public async Task<IActionResult> Semanal(int mes, int año)
         {
@@ -52,7 +54,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             var fechaReferencia = new DateTime(año, mes, 1);
             var diasDelMes = Enumerable.Range(1, fechaReferencia.AddMonths(1).AddDays(-1).Day);
             var diasSegmentados = diasDelMes.Chunk(7).ToList();
-            for (int i = 0; i < diasSegmentados.Count(); i++)
+            for (int i = 0; i < diasSegmentados.Count; i++)
             {
                 var semana = i + 1;
                 var fechaInicio = new DateTime(año, mes, diasSegmentados[i].First());
@@ -74,9 +76,11 @@ namespace Tutorial2ManejoPresupuesto.Controllers
                 }
             }
             agrupado=agrupado.OrderBy(x=>x.Semana).ToList();
-            var modelo = new ReporteSemanalDTO();
-            modelo.TransaccionesPorSemana = agrupado;
-            modelo.FechaReferencia = fechaReferencia;
+            var modelo = new ReporteSemanalDTO
+            {
+                TransaccionesPorSemana = agrupado,
+                FechaReferencia = fechaReferencia
+            };
 
             return View(modelo);
         }

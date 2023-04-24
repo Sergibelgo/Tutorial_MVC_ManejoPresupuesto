@@ -1,5 +1,42 @@
-﻿
+﻿@model ReporteSemanalDTO
 @{
     ViewData["title"] = "Reporte semanal";
+    string FormatearFecha(DateTime fecha)
+    {
+        return fecha.ToString("dd.MM");
+    }
+    var resumenMontos = new ResumenMontosDTO()
+            {
+                Gastos = Model.Gastos,
+                Ingresos = Model.Ingresos,
+                Total = Model.Ingresos - Model.Gastos
+            };
 }
 <partial name="_Submenu" model="SubmenuTransacciones.Semanal" />
+<partial name="_NavegarPorMeses" model="Model.FechaReferencia" />
+<partial name="_ResumenMontos" model="@resumenMontos" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>Semana</th>
+            <th>Ingresos</th>
+            <th>Gastos</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transacciones in Model.TransaccionesPorSemana)
+        {
+            <tr>
+                <td>
+                    <a style="text-decoration:none" asp-action="Index" asp-route-año="@Model.FechaReferencia.Year" asp-route-mes="@Model.FechaReferencia.Month">@FormatearFecha(transacciones.FechaInicio) ~ @FormatearFecha(transacciones.FechaFin)</a>
+                </td>
+                <td class="text-primary text-end">
+                    @transacciones.Ingresos
+                </td>
+                <td class="text-danger text-end">
+                    @transacciones.Gastos
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
