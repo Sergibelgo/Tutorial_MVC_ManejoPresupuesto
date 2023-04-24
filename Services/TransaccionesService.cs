@@ -13,6 +13,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         Task<IEnumerable<Transaccion>> GetByUserId(int usuarioId);
         Task<IEnumerable<TransaccionDTO>> GetByUserId(ParametroObtenerTransaccionesPorUsuario modelo);
         Task<IEnumerable<TransaccionDTO>> ObtenerPorCuentaId(ObtenerTransaccionesPorCuenta modelo);
+        Task<IEnumerable<ResultadoObtenerPorSemana>> ObtenerPorSemanas(ParametroObtenerTransaccionesPorUsuario modelo);
     }
     public class TransaccionesService : ITransaccionesService
     {
@@ -37,7 +38,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         public async Task<IEnumerable<Transaccion>> GetByUserId(int id)
         {
             using var connection = new SqlConnection(connectionString);
-            return await connection.QueryAsync<Transaccion>(@"SELECT * FROM TRANSACCIONES WHERE UserId=@id", new {id });
+            return await connection.QueryAsync<Transaccion>(@"SELECT * FROM TRANSACCIONES WHERE UserId=@id", new { id });
         }
         public async Task<IEnumerable<TransaccionDTO>> GetByUserId(ParametroObtenerTransaccionesPorUsuario modelo)
         {
@@ -77,8 +78,18 @@ namespace Tutorial2ManejoPresupuesto.Services
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryFirstOrDefaultAsync<Transaccion>(@"SELECT T.*,C.TipoOperacionId 
                                                                             FROM TRANSACCIONES T,Categorias C 
-                                                                            WHERE T.Id=@id AND T.UsuarioId=@usuarioId AND T.CategoriaId=C.id", 
+                                                                            WHERE T.Id=@id AND T.UsuarioId=@usuarioId AND T.CategoriaId=C.id",
                                                                             new { id, usuarioId });
+        }
+        public async Task<IEnumerable<ResultadoObtenerPorSemana>> ObtenerPorSemanas(ParametroObtenerTransaccionesPorUsuario modelo)
+        {
+            using var con = new SqlConnection(connectionString);
+            return await con.QueryAsync<ResultadoObtenerPorSemana>(@"select (DATEDIFF(d,@fechaInicio,FechaTransaccion)/7 + 1) as Semana,SUM(Monto) as Monto,cat.TipoOperacionId
+                                                                    from Transacciones t
+                                                                    INNER JOIN Categorias cat
+                                                                    on cat.Id=t.CategoriaId
+                                                                    where FechaTransaccion BETWEEN @fechaInicio and @fechaFin and t.UsuarioId=@usuarioId
+                                                                    group By DATEDIFF(d,@fechaInicio,FechaTransaccion)/7,cat.TipoOperacionId", modelo);
         }
     }
 }

@@ -4,6 +4,7 @@ namespace Tutorial2ManejoPresupuesto.Services
 {
     public interface IReporteService
     {
+        Task<IEnumerable<ResultadoObtenerPorSemana>> ObtenerReporteSemanal(int usuarioId, int mes, int año, dynamic ViewBag);
         Task<IEnumerable<TransaccionDTO>> ObtenerReporteTransaccionesDetalladas(int usuarioId, int mes, int año, dynamic ViewBag);
         Task<IEnumerable<TransaccionDTO>> ObtenerReporteTransaccionesDetalladasPorCuenta(int usuarioId, int cuentaId, int mes, int año, dynamic ViewBag);
     }
@@ -18,12 +19,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         public async Task<IEnumerable<TransaccionDTO>> ObtenerReporteTransaccionesDetalladas(int usuarioId, int mes, int año, dynamic ViewBag)
         {
             (DateTime fechaInicio, DateTime fechaFin) = GenerarFechaInicioFechaFin(mes, año);
-            var parametro = new ParametroObtenerTransaccionesPorUsuario()
-            {
-                UsuarioId = usuarioId,
-                FechaInicio = fechaInicio,
-                FechaFin = fechaFin
-            };
+            var parametro = ObtenerParametrosPorUsuario(usuarioId, fechaInicio, fechaFin);
             var transacciones = (await _transaccionesService.GetByUserId(parametro)).OrderBy(x => x.FechaTransaccion);
             AsignarValoresViewBag(ViewBag, fechaInicio);
             return transacciones;
@@ -41,6 +37,23 @@ namespace Tutorial2ManejoPresupuesto.Services
             var transacciones = (await _transaccionesService.ObtenerPorCuentaId(obtenerTransacciones)).OrderBy(x=>x.FechaTransaccion);
             AsignarValoresViewBag(ViewBag, fechaInicio);
             return transacciones;
+        }
+        public async Task<IEnumerable<ResultadoObtenerPorSemana>> ObtenerReporteSemanal(int usuarioId,int mes, int año,dynamic ViewBag)
+        {
+            (DateTime fechaInicio, DateTime fechaFin) = GenerarFechaInicioFechaFin(mes, año);
+            var parametro = ObtenerParametrosPorUsuario(usuarioId,fechaInicio,fechaFin);
+            AsignarValoresViewBag(ViewBag,fechaInicio);
+            var modelo = await _transaccionesService.ObtenerPorSemanas(parametro);
+            return modelo;
+        }
+        private ParametroObtenerTransaccionesPorUsuario ObtenerParametrosPorUsuario(int usuarioId,DateTime fechaInicio,DateTime fechaFin)
+        {
+            return new ParametroObtenerTransaccionesPorUsuario()
+            {
+                UsuarioId = usuarioId,
+                FechaInicio = fechaInicio,
+                FechaFin = fechaFin
+            };
         }
         private (DateTime fechaInicio, DateTime fechaFin) GenerarFechaInicioFechaFin(int mes, int ano)
         {
