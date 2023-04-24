@@ -24,7 +24,7 @@ namespace Tutorial2ManejoPresupuesto.Services
                 FechaInicio = fechaInicio,
                 FechaFin = fechaFin
             };
-            var transacciones = await _transaccionesService.GetByUserId(parametro);
+            var transacciones = (await _transaccionesService.GetByUserId(parametro)).OrderBy(x => x.FechaTransaccion);
             AsignarValoresViewBag(ViewBag, fechaInicio);
             return transacciones;
         }
@@ -38,7 +38,7 @@ namespace Tutorial2ManejoPresupuesto.Services
                 FechaInicio = fechaInicio,
                 FechaFin = fechaFin
             };
-            var transacciones = await _transaccionesService.ObtenerPorCuentaId(obtenerTransacciones);
+            var transacciones = (await _transaccionesService.ObtenerPorCuentaId(obtenerTransacciones)).OrderBy(x=>x.FechaTransaccion);
             AsignarValoresViewBag(ViewBag, fechaInicio);
             return transacciones;
         }
