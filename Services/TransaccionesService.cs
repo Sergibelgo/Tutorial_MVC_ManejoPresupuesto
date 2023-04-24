@@ -44,7 +44,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         {
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryAsync<TransaccionDTO>(
-                @"SELECT t.*, C.Nombre as NombreCategoria
+                @"SELECT t.*, C.Nombre as NombreCategoria,c.TipoOperacionId
                   FROM TRANSACCIONES t INNER JOIN Categorias c on c.Id=t.CategoriaId INNER JOIN Cuentas cu on cu.Id=t.CuentaId
                 WHERE t.UsuarioId=@usuarioId and  FechaTransaccion BETWEEN @FechaInicio AND @FECHAFIN
                     ORDER BY t.FechaTransaccion DESC", modelo);
@@ -52,7 +52,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         public async Task<IEnumerable<TransaccionDTO>> ObtenerPorCuentaId(ObtenerTransaccionesPorCuenta modelo)
         {
             using var connection = new SqlConnection(connectionString);
-            return await connection.QueryAsync<TransaccionDTO>(@"SELECT T.*,C.Nombre as NombreCategoria 
+            return await connection.QueryAsync<TransaccionDTO>(@"SELECT T.*,C.Nombre as NombreCategoria ,c.TipoOperacionId
                                                                     FROM Transacciones T,Categorias C 
                                                                     WHERE T.CuentaId=@CuentaId and T.UsuarioId=@UsuarioId and T.CategoriaId=C.Id and FechaTransaccion BETWEEN @FechaInicio AND @FECHAFIN"
                                                             , modelo);

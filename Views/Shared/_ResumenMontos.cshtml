@@ -1,0 +1,30 @@
+﻿@model ResumenMontosDTO
+@{
+}
+<div class="mb-3 d-flex justify-content-between">
+    <div>
+        <div>
+            <strong>Depósitos</strong>
+        </div>
+        <div class="text-primary">
+            @Model.Ingresos
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <strong>Retiros</strong>
+        </div>
+       <div class="text-danger">
+           @Model.Gastos.ToString("N")
+       </div>
+    </div>
+    <div>
+        <div>
+            <strong>Total</strong>
+        </div>
+        <div>
+            @Model.Total.ToString("N")
+        </div>
+    </div>
+</div>

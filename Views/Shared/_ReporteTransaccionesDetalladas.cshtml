@@ -1,9 +1,14 @@
-﻿@model IEnumerable<TransaccionDTO>
-<h4>
-    <a asp-route-mes="@ViewBag.mesAnterior" asp-route-año="@ViewBag.añoAnterior" class="btn btn-secondary"><i class="bi-chevron-left"></i></a>
-    @ViewBag.fechaActual.ToString("MMM-yyy")
-    <a asp-route-mes="@ViewBag.mesPosterior" asp-route-año="@ViewBag.añoPosterior" class="btn btn-secondary"><i class="bi-chevron-right"></i></a>
-</h4>
+﻿@model TransaccionesViewDTO
+@{
+    var resumen = new ResumenMontosDTO()
+            {
+                Ingresos = Model.Ingresos,
+                Gastos = Model.Gastos,
+                Total = Model.Total
+        };
+}
+<partial name="_NavegarPorMeses" model="@ViewBag.fechaActual" />
+<partial name="_ResumenMontos" model="resumen" />
 <table class="table">
     <thead>
     <th></th>
@@ -21,7 +26,7 @@
     </th>
     </thead>
     <tbody>
-        @foreach (var transaccion in Model)
+        @foreach (var transaccion in Model.transacciones)
         {
             <tr>
                 <td>
