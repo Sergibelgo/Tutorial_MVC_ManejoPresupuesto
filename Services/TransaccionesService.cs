@@ -45,7 +45,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         {
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryAsync<TransaccionDTO>(
-                @"SELECT t.*, C.Nombre as NombreCategoria,c.TipoOperacionId
+                @"SELECT t.*, C.Nombre as NombreCategoria,c.TipoOperacionId,cu.Descripcion as NombreCuenta
                   FROM TRANSACCIONES t INNER JOIN Categorias c on c.Id=t.CategoriaId INNER JOIN Cuentas cu on cu.Id=t.CuentaId
                 WHERE t.UsuarioId=@usuarioId and  FechaTransaccion BETWEEN @FechaInicio AND @FECHAFIN
                     ORDER BY t.FechaTransaccion DESC", modelo);

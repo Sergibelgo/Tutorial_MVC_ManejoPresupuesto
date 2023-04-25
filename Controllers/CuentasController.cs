@@ -127,7 +127,11 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             }
             ViewBag.NombreCuenta = cuenta.Descripcion;
             var transacciones = await _reporteService.ObtenerReporteTransaccionesDetalladasPorCuenta(usuarioId, cuenta.Id, mes, año, ViewBag);
-            return View(transacciones);
+            var modelo = new TransaccionesViewDTO()
+            {
+                transacciones = transacciones
+            };
+            return View(modelo);
         }
         private async Task<IEnumerable<SelectListItem>> ObtenerTiposCuentas()
         {

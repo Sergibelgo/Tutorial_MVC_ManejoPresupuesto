@@ -5,25 +5,27 @@
                 Ingresos = Model.Ingresos,
                 Gastos = Model.Gastos,
                 Total = Model.Total
-        };
+            };
 }
 <partial name="_NavegarPorMeses" model="@ViewBag.fechaActual" />
 <partial name="_ResumenMontos" model="resumen" />
 <table class="table">
     <thead>
-    <th></th>
-    <th>
-        Categoria
-    </th>
-    <th>
-        Nota
-    </th>
-    <th>
-        Monto
-    </th>
-    <th>
-        Fecha
-    </th>
+        <tr>
+            <th></th>
+            <th>
+                Categoria
+            </th>
+            <th>
+                Nota
+            </th>
+            <th>
+                Monto
+            </th>
+            <th>
+                Fecha
+            </th>
+        </tr>
     </thead>
     <tbody>
         @foreach (var transaccion in Model.transacciones)
