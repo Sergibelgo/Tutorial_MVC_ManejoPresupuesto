@@ -1,4 +1,23 @@
 ﻿@{
     ViewData["title"] = "Reporte calendario";
 }
-<partial name="_Submenu" model="SubmenuTransacciones.Calendario"/>
+<partial name="_Submenu" model="SubmenuTransacciones.Calendario" />
+<div class="row d-flex justify-content-center">
+    <div class="col-7">
+        <div id="calendario">
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/lib/fullcalendar/index.global.min.js"></script>
+    <script>
+        $(() => {
+            const calendarioEl = document.getElementById("calendario");
+            const calendario = new FullCalendar.Calendar(calendarioEl, {
+                dayMaxEventRows: 3,
+                initialView: "dayGridMonth"
+            })
+            calendario.render();
+        })
+    </script>
+}
