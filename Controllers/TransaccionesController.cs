@@ -87,7 +87,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         public async Task<IActionResult> Mensual(int año)
         {
             var usuarioId = _usuariosService.GetUsuario();
-            if (año == 0)
+            if (año==0)
             {
                 año = DateTime.Today.Year;
             }
@@ -99,7 +99,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
                     Ingreso = x.Where(x => x.TipoOperacionId == TipoOperacion.Ingreso).Select(x => x.Monto).FirstOrDefault(),
                     Gasto = x.Where(x => x.TipoOperacionId == TipoOperacion.Gasto).Select(x => x.Monto).FirstOrDefault()
                 }).ToList();
-            for (int mes = 0; mes <= 12; mes++)
+            for (int mes = 1; mes <= 12; mes++)
             {
                 var transaccion = transaccionesAgrupadas.FirstOrDefault(x => x.Mes == mes);
                 var fechaReferencia = new DateTime(año, mes, 1);
@@ -116,10 +116,10 @@ namespace Tutorial2ManejoPresupuesto.Controllers
                     transaccion.FechaReferencia = fechaReferencia;
                 }
             }
-            transaccionesAgrupadas = transaccionesAgrupadas.OrderByDescending(x => x.Mes).ToList();
+            transaccionesAgrupadas = transaccionesAgrupadas.OrderBy(x => x.Mes).ToList();
             var modelo = new ReporteMensualDTO()
             {
-                TransaccionesPorMes = transaccionesPorMes,
+                TransaccionesPorMes = transaccionesAgrupadas,
                 Año = año,
             };
             return View(modelo);
