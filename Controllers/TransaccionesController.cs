@@ -146,6 +146,36 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             var nombreArchivo = $"Manejo_Presupuesto-{fechaInicio.ToString("MMM-yyyy")}.xlsx";
             return GenerarExcel(nombreArchivo, transacciones);
         }
+        [HttpGet]
+        public async Task<FileResult> ExportarExcelPorAño(int año)
+        {
+            var fechaInicio = new DateTime(año, 1, 1);
+            var fechaFin = fechaInicio.AddYears(1).AddDays(-1);
+            var usuarioId = _usuariosService.GetUsuario();
+            var transacciones = await _transaccionesService.GetByUserId(new ParametroObtenerTransaccionesPorUsuario()
+            {
+                UsuarioId = usuarioId,
+                FechaInicio = fechaInicio,
+                FechaFin = fechaFin
+            });
+            var nombreArchivo = $"Manejo Presupuesto - {fechaInicio.ToString("yyyy")}.xlsx";
+            return GenerarExcel(nombreArchivo, transacciones);
+        }
+        [HttpGet]
+        public async Task<FileResult> ExportarExcelTodo()
+        {
+            var fechaInicio = DateTime.Today.AddYears(-200);
+            var fechaFin=DateTime.Today.AddDays(1000);
+            var usuarioId = _usuariosService.GetUsuario();
+            var transacciones = await _transaccionesService.GetByUserId(new ParametroObtenerTransaccionesPorUsuario()
+            {
+                UsuarioId = usuarioId,
+                FechaInicio = fechaInicio,
+                FechaFin = fechaFin
+            });
+            var nombreArchivo = $"Manejo Presupuesto - {DateTime.Today.ToString("dd-MM-yyyy")}.xlsx";
+            return GenerarExcel(nombreArchivo, transacciones);
+        }
 
         public IActionResult Calendario()
         {
