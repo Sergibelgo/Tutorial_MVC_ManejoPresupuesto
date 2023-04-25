@@ -75,7 +75,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
                     grupoSemana.FechaFin = fechaFin;
                 }
             }
-            agrupado=agrupado.OrderBy(x=>x.Semana).ToList();
+            agrupado = agrupado.OrderBy(x => x.Semana).ToList();
             var modelo = new ReporteSemanalDTO
             {
                 TransaccionesPorSemana = agrupado,
@@ -84,9 +84,45 @@ namespace Tutorial2ManejoPresupuesto.Controllers
 
             return View(modelo);
         }
-        public IActionResult Mensual()
+        public async Task<IActionResult> Mensual(int año)
         {
-            return View();
+            var usuarioId = _usuariosService.GetUsuario();
+            if (año == 0)
+            {
+                año = DateTime.Today.Year;
+            }
+            var transaccionesPorMes = await _transaccionesService.ObtenerPorMes(usuarioId, año);
+            var transaccionesAgrupadas = transaccionesPorMes.GroupBy(x => x.Mes).
+                Select(x => new ResultadoObtenerPorMes()
+                {
+                    Mes = x.Key,
+                    Ingreso = x.Where(x => x.TipoOperacionId == TipoOperacion.Ingreso).Select(x => x.Monto).FirstOrDefault(),
+                    Gasto = x.Where(x => x.TipoOperacionId == TipoOperacion.Gasto).Select(x => x.Monto).FirstOrDefault()
+                }).ToList();
+            for (int mes = 0; mes <= 12; mes++)
+            {
+                var transaccion = transaccionesAgrupadas.FirstOrDefault(x => x.Mes == mes);
+                var fechaReferencia = new DateTime(año, mes, 1);
+                if (transaccion is null)
+                {
+                    transaccionesAgrupadas.Add(new ResultadoObtenerPorMes()
+                    {
+                        Mes = mes,
+                        FechaReferencia = fechaReferencia
+                    });
+                }
+                else
+                {
+                    transaccion.FechaReferencia = fechaReferencia;
+                }
+            }
+            transaccionesAgrupadas = transaccionesAgrupadas.OrderByDescending(x => x.Mes).ToList();
+            var modelo = new ReporteMensualDTO()
+            {
+                TransaccionesPorMes = transaccionesPorMes,
+                Año = año,
+            };
+            return View(modelo);
         }
         public IActionResult ExcelReporte()
         {

@@ -13,6 +13,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         Task<IEnumerable<Transaccion>> GetByUserId(int usuarioId);
         Task<IEnumerable<TransaccionDTO>> GetByUserId(ParametroObtenerTransaccionesPorUsuario modelo);
         Task<IEnumerable<TransaccionDTO>> ObtenerPorCuentaId(ObtenerTransaccionesPorCuenta modelo);
+        Task<IEnumerable<ResultadoObtenerPorMes>> ObtenerPorMes(int usuarioId, int año);
         Task<IEnumerable<ResultadoObtenerPorSemana>> ObtenerPorSemanas(ParametroObtenerTransaccionesPorUsuario modelo);
     }
     public class TransaccionesService : ITransaccionesService
@@ -90,6 +91,14 @@ namespace Tutorial2ManejoPresupuesto.Services
                                                                     on cat.Id=t.CategoriaId
                                                                     where FechaTransaccion BETWEEN @fechaInicio and @fechaFin and t.UsuarioId=@usuarioId
                                                                     group By DATEDIFF(d,@fechaInicio,FechaTransaccion)/7,cat.TipoOperacionId", modelo);
+        }
+        public async Task<IEnumerable<ResultadoObtenerPorMes>> ObtenerPorMes(int usuarioId, int año)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryAsync<ResultadoObtenerPorMes>(@"SELECT MONTH(t.FechaTransaccion) as Mes, SUM(t.Monto) as Monto,c.TipoOperacionId
+                                                                        FROM Transacciones t,Categorias c
+                                                                        WHERE t.CategoriaId=c.Id and t.UsuarioId=@usuarioId and Year(t.FechaTransaccion)=@año
+                                                                        GROUP BY MONTH(t.FechaTransaccion), c.TipoOperacionId", new { usuarioId, año });
         }
     }
 }
