@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+using Tutorial2ManejoPresupuesto.Models;
 using Tutorial2ManejoPresupuesto.Services;
 
 namespace Tutorial2ManejoPresupuesto
@@ -16,8 +18,14 @@ namespace Tutorial2ManejoPresupuesto
             builder.Services.AddTransient<ICategoriasService, CategoriasService>();
             builder.Services.AddTransient<ITransaccionesService, TransaccionesService>();
             builder.Services.AddTransient<IReporteService, ReporteService>();
+            builder.Services.AddTransient<IUsuariosAuthService, UsuariosAuthService>();
+            //Añadir el servicio de user store
+            builder.Services.AddTransient<IUserStore<Usuario>,UsuarioStore>();
             //Añadir y configurar automapper mirar el servicio AutoMapperProfiles
             builder.Services.AddAutoMapper(typeof(Program));
+
+            //añadir entity
+            builder.Services.AddIdentityCore<Usuario>();
 
             var app = builder.Build();
 
