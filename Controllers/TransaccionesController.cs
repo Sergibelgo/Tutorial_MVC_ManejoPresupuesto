@@ -176,11 +176,12 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             var nombreArchivo = $"Manejo Presupuesto - {DateTime.Today.ToString("dd-MM-yyyy")}.xlsx";
             return GenerarExcel(nombreArchivo, transacciones);
         }
-
+        [HttpGet]
         public IActionResult Calendario()
         {
             return View();
         }
+        [HttpGet]
         public async Task<JsonResult> ObtenerTransaccionesCalendario(DateTime start,DateTime end)
         {
             var usuarioId = _usuariosService.GetUsuario();
@@ -198,6 +199,18 @@ namespace Tutorial2ManejoPresupuesto.Controllers
                 Color=(x.TipoOperacionId==(int)TipoOperacion.Gasto)? "Red":""
             });
             return Json(eventosCalendario);
+        }
+        [HttpGet]
+        public async Task<JsonResult> ObtenerTransaccionesPorFecha(DateTime fecha)
+        {
+            var usuarioId = _usuariosService.GetUsuario();
+            var transacciones = await _transaccionesService.GetByUserId(new ParametroObtenerTransaccionesPorUsuario()
+            {
+                UsuarioId = usuarioId,
+                FechaInicio = fecha,
+                FechaFin = fecha
+            });
+            return Json(transacciones);
         }
         public async Task<IActionResult> Index2()
         {
