@@ -36,7 +36,7 @@ namespace Tutorial2ManejoPresupuesto.Services
                 FechaInicio = fechaInicio,
                 FechaFin = fechaFin
             };
-            var transacciones = (await _transaccionesService.ObtenerPorCuentaId(obtenerTransacciones)).OrderBy(x=>x.FechaTransaccion);
+            var transacciones = (await _transaccionesService.ObtenerPorCuentaId(obtenerTransacciones)).OrderBy(x=>x.FechaTransaccion).ToList();
             AsignarValoresViewBag(ViewBag, fechaInicio);
             return transacciones;
         }
