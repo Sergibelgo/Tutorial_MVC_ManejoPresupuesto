@@ -7,10 +7,13 @@ namespace Tutorial2ManejoPresupuesto.Controllers
     public class UsuariosController : Controller
     {
         private readonly UserManager<Usuario> _userManager;
+        private readonly SignInManager<Usuario> _signInManager;
 
-        public UsuariosController(UserManager<Usuario> userManager)
+        public UsuariosController(UserManager<Usuario> userManager,SignInManager<Usuario> signInManager)
         {
             this._userManager = userManager;
+            //Servicio para manejar login de usuarios
+            this._signInManager = signInManager;
         }
         public IActionResult Registro()
         {
@@ -30,6 +33,8 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             var resultado = await _userManager.CreateAsync(usuario, password: regitro.Password);
             if (resultado.Succeeded)
             {
+                //Esto genera la cookie que guardara el usuario
+                await _signInManager.SignInAsync(usuario, isPersistent:true);
                 return RedirectToAction("Index", "Transacciones");
             }
             else
