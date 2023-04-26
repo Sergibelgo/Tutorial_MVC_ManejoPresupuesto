@@ -29,10 +29,11 @@ namespace Tutorial2ManejoPresupuesto
             {
                 opciones.Password.RequireDigit = false;
                 opciones.Password.RequireLowercase = false;
-                opciones.Password.RequireUppercase= false;
+                opciones.Password.RequireUppercase = false;
                 opciones.Password.RequireNonAlphanumeric = false;
                 opciones.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-            });
+            }).AddErrorDescriber<MensajesDeErrorIdentity>(); //Esto sirve para añadir los mensajes personalizados de error creados en el servicio MensajesDeErrorIdentity
+                
 
             var app = builder.Build();
 
