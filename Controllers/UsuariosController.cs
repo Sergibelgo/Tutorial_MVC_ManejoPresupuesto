@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Tutorial2ManejoPresupuesto.Models;
 using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace Tutorial2ManejoPresupuesto.Controllers
 {
@@ -56,7 +57,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return View();
+                return View();
         }
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO modelo)
