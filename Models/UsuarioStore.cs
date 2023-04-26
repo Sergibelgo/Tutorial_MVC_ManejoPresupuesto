@@ -24,7 +24,7 @@ namespace Tutorial2ManejoPresupuesto.Models
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
 
         public async Task<Usuario> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
@@ -37,9 +37,9 @@ namespace Tutorial2ManejoPresupuesto.Models
             throw new NotImplementedException();
         }
 
-        public Task<Usuario> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public async Task<Usuario> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await _usuariosAuthService.GetByEmail(normalizedUserName);
         }
 
         public Task<string> GetEmailAsync(Usuario user, CancellationToken cancellationToken)
@@ -74,7 +74,7 @@ namespace Tutorial2ManejoPresupuesto.Models
 
         public Task<string> GetUserNameAsync(Usuario user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.EmailNormalizado);
+            return Task.FromResult(user.Email);
         }
 
         public Task<bool> HasPasswordAsync(Usuario user, CancellationToken cancellationToken)
@@ -100,7 +100,7 @@ namespace Tutorial2ManejoPresupuesto.Models
 
         public Task SetNormalizedUserNameAsync(Usuario user, string normalizedName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(user.EmailNormalizado = normalizedName);
         }
 
         public Task SetPasswordHashAsync(Usuario user, string passwordHash, CancellationToken cancellationToken)

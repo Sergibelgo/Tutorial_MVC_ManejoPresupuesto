@@ -24,8 +24,15 @@ namespace Tutorial2ManejoPresupuesto
             //Añadir y configurar automapper mirar el servicio AutoMapperProfiles
             builder.Services.AddAutoMapper(typeof(Program));
 
-            //añadir entity
-            builder.Services.AddIdentityCore<Usuario>();
+            //añadir entity y para configurar identity usar opciones=>{}
+            builder.Services.AddIdentityCore<Usuario>(opciones =>
+            {
+                opciones.Password.RequireDigit = false;
+                opciones.Password.RequireLowercase = false;
+                opciones.Password.RequireUppercase= false;
+                opciones.Password.RequireNonAlphanumeric = false;
+                opciones.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+            });
 
             var app = builder.Build();
 
