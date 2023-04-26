@@ -7,17 +7,20 @@ namespace Tutorial2ManejoPresupuesto.Services
     public class TiposCuentasService : ITiposCuentasService
     {
         private readonly string connectionString;
-        public TiposCuentasService(IConfiguration configuration)
+        private readonly IUsuariosService _usuariosService;
+
+        public TiposCuentasService(IConfiguration configuration,IUsuariosService usuariosService)
         {
 
             this.connectionString = configuration.GetConnectionString("DefaultConnection");
-
+            this._usuariosService = usuariosService;
         }
         public async Task Crear(TipoCuenta tipoCuenta)
         {
-
+            var usuarioId = _usuariosService.GetUsuario();
+            tipoCuenta.UsuarioId=usuarioId;
             using var connection = new SqlConnection(connectionString);
-            var id = await connection.QuerySingleAsync<int>($@"INSERT INTO TiposCuentas(Nombre,Orden) VALUES(@Nombre,(SELECT MAX(Orden)+1 FROM TiposCuentas));
+            var id = await connection.QuerySingleAsync<int>($@"INSERT INTO TiposCuentas(Nombre,UsuarioId,Orden) VALUES(@Nombre,@UsuarioId,(SELECT MAX(Orden)+1 FROM TiposCuentas));
                                                     SELECT SCOPE_IDENTITY();", tipoCuenta);
             tipoCuenta.Id = id;
         }
@@ -29,8 +32,9 @@ namespace Tutorial2ManejoPresupuesto.Services
         }
         public async Task<IEnumerable<TipoCuenta>> GetAll()
         {
+            var usuarioId = _usuariosService.GetUsuario();
             using var connection = new SqlConnection(connectionString);
-            return await connection.QueryAsync<TipoCuenta>("SELECT * FROM TiposCuentas ORDER BY Orden");
+            return await connection.QueryAsync<TipoCuenta>("SELECT * FROM TiposCuentas WHERE UsuarioId=@UsuarioId ORDER BY Orden", new {usuarioId});
         }
         public async Task Update(TipoCuenta tipoCuenta)
         {
