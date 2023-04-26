@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.AspNetCore.Identity;
 using Tutorial2ManejoPresupuesto.Models;
 using Tutorial2ManejoPresupuesto.Services;
@@ -20,9 +21,12 @@ namespace Tutorial2ManejoPresupuesto
             builder.Services.AddTransient<IReporteService, ReporteService>();
             builder.Services.AddTransient<IUsuariosAuthService, UsuariosAuthService>();
             //Añadir el servicio de user store
-            builder.Services.AddTransient<IUserStore<Usuario>,UsuarioStore>();
+            builder.Services.AddTransient<IUserStore<Usuario>, UsuarioStore>();
             //Añadir y configurar automapper mirar el servicio AutoMapperProfiles
             builder.Services.AddAutoMapper(typeof(Program));
+            //Añadir el servicio de login hay que añadir tanto el transient de SignInManager<T> y AddHttpContextAccessor()
+            builder.Services.AddTransient<SignInManager<Usuario>>(); //Añadir servicio de login
+            builder.Services.AddHttpContextAccessor();
 
             //añadir entity y para configurar identity usar opciones=>{}
             builder.Services.AddIdentityCore<Usuario>(opciones =>
@@ -31,9 +35,15 @@ namespace Tutorial2ManejoPresupuesto
                 opciones.Password.RequireLowercase = false;
                 opciones.Password.RequireUppercase = false;
                 opciones.Password.RequireNonAlphanumeric = false;
-                opciones.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
             }).AddErrorDescriber<MensajesDeErrorIdentity>(); //Esto sirve para añadir los mensajes personalizados de error creados en el servicio MensajesDeErrorIdentity
-                
+            //Añadir el sistema de autentificacion al programa
+            builder.Services.AddAuthentication(options =>
+            {
+                //Añade el esquema por defecto de autentificacion de identity
+                options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignOutScheme = IdentityConstants.ApplicationScheme;
+            }).AddCookie(IdentityConstants.ApplicationScheme); //Esto creara la cookie
 
             var app = builder.Build();
 
@@ -49,6 +59,9 @@ namespace Tutorial2ManejoPresupuesto
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            //AÑADIR ESTO PARA USAR AUTENTIFICACION
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
