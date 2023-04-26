@@ -16,6 +16,7 @@ namespace Tutorial2ManejoPresupuesto.Models
         //[Remote(action: "VerificarExisteTipoCuenta",controller:"TiposCuentas")]
         public string Nombre { get; set; }
         public int Orden { get; set; }
+        public int UsuarioId { get; set; }
         //permite cambiar las reglas de validacion del modelo
         //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         //{
