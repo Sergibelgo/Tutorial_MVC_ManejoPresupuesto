@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Tutorial2ManejoPresupuesto.Models;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Tutorial2ManejoPresupuesto.Controllers
 {
@@ -9,7 +10,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         private readonly UserManager<Usuario> _userManager;
         private readonly SignInManager<Usuario> _signInManager;
 
-        public UsuariosController(UserManager<Usuario> userManager,SignInManager<Usuario> signInManager)
+        public UsuariosController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager)
         {
             this._userManager = userManager;
             //Servicio para manejar login de usuarios
@@ -34,7 +35,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             if (resultado.Succeeded)
             {
                 //Esto genera la cookie que guardara el usuario
-                await _signInManager.SignInAsync(usuario, isPersistent:true);
+                await _signInManager.SignInAsync(usuario, isPersistent: true);
                 return RedirectToAction("Index", "Transacciones");
             }
             else
@@ -45,6 +46,12 @@ namespace Tutorial2ManejoPresupuesto.Controllers
                 }
                 return View(regitro);
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            return RedirectToAction("Index", "Home");
         }
     }
 }
