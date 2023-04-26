@@ -1,5 +1,7 @@
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Tutorial2ManejoPresupuesto.Models;
 using Tutorial2ManejoPresupuesto.Services;
 
@@ -10,9 +12,13 @@ namespace Tutorial2ManejoPresupuesto
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            var politicaUsuariosAutenticados = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();//Genera una politica de autentificacion 
+            //Añade la politica a toda la aplicacion
+            builder.Services.AddControllersWithViews(opciones =>
+            {
+                opciones.Filters.Add(new AuthorizeFilter(politicaUsuariosAutenticados));
+            });
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
             builder.Services.AddTransient<ITiposCuentasService, TiposCuentasService>();
             builder.Services.AddTransient<IUsuariosService, UsuariosService>();
             builder.Services.AddTransient<ICuentasService, CuentasService>();
@@ -43,7 +49,11 @@ namespace Tutorial2ManejoPresupuesto
                 options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
                 options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
                 options.DefaultSignOutScheme = IdentityConstants.ApplicationScheme;
-            }).AddCookie(IdentityConstants.ApplicationScheme); //Esto creara la cookie
+            }).AddCookie(IdentityConstants.ApplicationScheme, opciones => //Esto creara la cookie
+            {
+                opciones.LoginPath = "/usuarios/login";
+            });
+            
 
             var app = builder.Build();
 

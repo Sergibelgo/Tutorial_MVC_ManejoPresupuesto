@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClosedXML.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Data;
@@ -10,6 +11,7 @@ using Tutorial2ManejoPresupuesto.Services;
 
 namespace Tutorial2ManejoPresupuesto.Controllers
 {
+    //[Authorize] Para ponerlo en todo el controlador
     public class TransaccionesController : Controller
     {
         private readonly ITransaccionesService _transaccionesService;
@@ -28,6 +30,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             this.mapper = mapper;
             this._reporteService = reporteService;
         }
+        //[Authorize] para ponerlo a endpoints concretos
         public async Task<IActionResult> Index(int mes, int año)
         {
             var usuarioId = _usuariosService.GetUsuario();

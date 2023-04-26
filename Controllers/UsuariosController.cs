@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Tutorial2ManejoPresupuesto.Models;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tutorial2ManejoPresupuesto.Controllers
 {
@@ -17,10 +18,12 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             //Servicio para manejar login de usuarios
             this._signInManager = signInManager;
         }
+        [AllowAnonymous] //Permite entrar sin estar registrado
         public IActionResult Registro()
         {
             return View();
         }
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Registro(RegistroDTO regitro)
         {
@@ -54,11 +57,13 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
             return RedirectToAction("Index", "Home");
         }
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Login()
         {
                 return View();
         }
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO modelo)
         {
