@@ -3,7 +3,7 @@
     public class PaginacionDTO
     {
         public int Pagina { get; set; } = 1;
-        private int recordsPorPagina { get; set; } = 10;
+        private int recordsPorPagina { get; set; } = 5;
         private readonly int cantidadMaximaRecordsPorPagina = 50;
         public int RecordsPorPagina
         {
