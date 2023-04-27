@@ -10,7 +10,7 @@ namespace Tutorial2ManejoPresupuesto.Services
         Task Delete(int id);
         Task<Categoria> GetById(int id, int usuarioId);
         Task<IEnumerable<Categoria>> GetByOperation(int usuarioId, TipoOperacion tipoOperacion);
-        Task<IEnumerable<Categoria>> GetByUserId(int usuarioId);
+        Task<IEnumerable<Categoria>> GetByUserId(int usuarioId, PaginacionDTO paginacion);
         Task Update(Categoria categoria);
     }
     public class CategoriasService : ICategoriasService
@@ -29,11 +29,13 @@ namespace Tutorial2ManejoPresupuesto.Services
                                                                 SELECT SCOPE_IDENTITY();", categoria);
             categoria.Id = id;
         }
-        public async Task<IEnumerable<Categoria>> GetByUserId(int usuarioId)
+        public async Task<IEnumerable<Categoria>> GetByUserId(int usuarioId,PaginacionDTO paginacion)
         {
             using var connection = new SqlConnection(this.connectionString);
-            return await connection.QueryAsync<Categoria>(@"SELECT * FROM Categorias 
-                                                            WHERE UsuarioId=@usuarioId", new { usuarioId });
+            return await connection.QueryAsync<Categoria>(@$"SELECT * FROM Categorias 
+                                                            WHERE UsuarioId=@usuarioId
+                                                            ORDER BY Nombre
+                                                            OFFSET {paginacion.RecordsASaltar} ROWS FETCH NEXT {paginacion.RecordsPorPagina} ROWS ONLY", new { usuarioId });
         }
         public async Task<Categoria> GetById(int id, int usuarioId)
         {

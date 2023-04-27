@@ -14,10 +14,10 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             this._categoriasService = categoriasService;
             this._usuariosService = usuariosService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(PaginacionDTO paginacion)
         {
             var usuarioId = _usuariosService.GetUsuario();
-            var categorias = await _categoriasService.GetByUserId(usuarioId);
+            var categorias = await _categoriasService.GetByUserId(usuarioId,paginacion);
             return View(categorias);
         }
         [HttpGet]
