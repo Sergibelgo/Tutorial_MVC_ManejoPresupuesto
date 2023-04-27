@@ -25,7 +25,7 @@ namespace Tutorial2ManejoPresupuesto.Controllers
                 Pagina=paginacion.Pagina,
                 RecordsPorPagina=paginacion.RecordsPorPagina,
                 CantidadTotalRecords=totalCategorias,
-                BaseURL="/categorias"
+                BaseURL=Url.Action()
             };
             return View(respuestaVM);
         }
