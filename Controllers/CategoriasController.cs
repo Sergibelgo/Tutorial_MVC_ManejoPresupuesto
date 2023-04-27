@@ -17,8 +17,17 @@ namespace Tutorial2ManejoPresupuesto.Controllers
         public async Task<IActionResult> Index(PaginacionDTO paginacion)
         {
             var usuarioId = _usuariosService.GetUsuario();
-            var categorias = await _categoriasService.GetByUserId(usuarioId,paginacion);
-            return View(categorias);
+            var categorias = await _categoriasService.GetByUserId(usuarioId, paginacion);
+            var totalCategorias = await _categoriasService.Contar(usuarioId);
+            var respuestaVM = new PaginacionRespuesta<Categoria>()
+            {
+                Elementos=categorias,
+                Pagina=paginacion.Pagina,
+                RecordsPorPagina=paginacion.RecordsPorPagina,
+                CantidadTotalRecords=totalCategorias,
+                BaseURL="/categorias"
+            };
+            return View(respuestaVM);
         }
         [HttpGet]
         public IActionResult Crear()

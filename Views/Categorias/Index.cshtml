@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Categoria>
+﻿@model PaginacionRespuesta<Categoria>
 @{
     ViewData["title"] = "Index";
 }
@@ -7,18 +7,20 @@
 <div>
     <table class="table">
         <thead>
-        <th>
-            Acciones
-        </th>
-        <th>
-            Nombre
-        </th>
-        <th>
-            Tipo
-        </th>
+            <tr>
+                <th>
+                    Acciones
+                </th>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Tipo
+                </th>
+            </tr>
         </thead>
         <tbody>
-            @foreach (var categoria in Model)
+            @foreach (var categoria in Model.Elementos)
             {
                 <tr>
                     <td>
