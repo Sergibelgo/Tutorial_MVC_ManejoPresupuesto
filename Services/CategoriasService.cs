@@ -6,6 +6,7 @@ namespace Tutorial2ManejoPresupuesto.Services
 {
     public interface ICategoriasService
     {
+        Task<int> Contar(int usuarioId);
         Task Create(Categoria categoria);
         Task Delete(int id);
         Task<Categoria> GetById(int id, int usuarioId);
@@ -36,6 +37,11 @@ namespace Tutorial2ManejoPresupuesto.Services
                                                             WHERE UsuarioId=@usuarioId
                                                             ORDER BY Nombre
                                                             OFFSET {paginacion.RecordsASaltar} ROWS FETCH NEXT {paginacion.RecordsPorPagina} ROWS ONLY", new { usuarioId });
+        }
+        public async Task<int> Contar(int usuarioId)
+        {
+            using var connection = new SqlConnection(this.connectionString);
+            return await connection.ExecuteScalarAsync<int>(@"SELECT COUNT(*) FROM Categorias WHERE UsuarioId=@usuarioId", new {usuarioId});
         }
         public async Task<Categoria> GetById(int id, int usuarioId)
         {
