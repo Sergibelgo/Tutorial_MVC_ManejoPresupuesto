@@ -36,8 +36,10 @@ namespace Tutorial2ManejoPresupuesto.Controllers
             var usuarioId = _usuariosService.GetUsuario();
             var transacciones = await _reporteService.ObtenerReporteTransaccionesDetalladas(usuarioId, mes, año, ViewBag);
             ViewBag.urlRetorno = HttpContext.Request.Path + HttpContext.Request.QueryString;
-            var model = new TransaccionesViewDTO();
-            model.transacciones = transacciones;
+            TransaccionesViewDTO model = new()
+            {
+                transacciones = transacciones
+            };
             return View(model);
         }
         public async Task<IActionResult> Semanal(int mes, int año)
